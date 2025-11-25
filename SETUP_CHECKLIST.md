@@ -16,9 +16,10 @@ Use this checklist to verify your setup is complete and working correctly.
 - [ ] Service account created
 - [ ] Service account JSON key downloaded
 - [ ] Google Sheet created with proper column headers
+- [ ] "Teachers" sheet created with Teacher and Grade columns
+- [ ] "Info" sheet created with labels in column A and values in column B
 - [ ] Service account email shared with sheet (Editor permission)
 - [ ] Spreadsheet ID copied from URL
-- [ ] (Optional) "Teachers" sheet created with teacher names
 
 ## ✅ Environment Configuration
 

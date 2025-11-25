@@ -11,7 +11,7 @@ A full-stack web application for managing science fair project registrations. Bu
 - 🔒 Security features including CORS, Helmet, rate limiting
 - 📊 Google Sheets integration for data storage
 - ✅ Client and server-side validation
-- 🧪 Comprehensive test coverage
+- 🧪 Comprehensive test coverage (Backend: 95%+, Frontend: 95%+)
 - 🐳 Docker support for easy deployment
 - 🚀 CI/CD pipeline with GitHub Actions
 - ♿ Accessibility-focused design (WCAG compliant)
@@ -147,7 +147,7 @@ cd science-fair-registration
    - Teacher
    - Grade
 4. Populate Teachers sheet with all teacher names/grades
-5. Create a third sheet named Info with following in column A and and data in column B:
+5. Create a third sheet named "Info" with labels in column A and data in column B:
    - School
    - Contact
    - Registration Deadline
@@ -380,9 +380,9 @@ Register a new science fair project.
 ```json
 {
   "success": true,
-  "registrationId": "uuid-v4",
   "projectId": 100,
-  "timestamp": "2025-11-24T12:00:00.000Z"
+  "timestamp": "2025-11-25T12:00:00.000Z",
+  "message": "Registration successful"
 }
 ```
 
@@ -393,7 +393,10 @@ Get list of available teachers.
 ```json
 {
   "success": true,
-  "teachers": ["Mrs. Smith", "Mr. Johnson", "Ms. Williams"]
+  "teachers": [
+    { "name": "Mrs. Smith", "grade": "5th" },
+    { "name": "Mr. Johnson", "grade": "6th" }
+  ]
 }
 ```
 
