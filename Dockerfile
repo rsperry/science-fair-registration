@@ -21,7 +21,7 @@ FROM node:24-alpine AS backend-builder
 WORKDIR /app/backend
 
 COPY backend/package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 
 COPY backend/ ./
 RUN npm run build
@@ -31,10 +31,14 @@ FROM node:24-alpine
 
 WORKDIR /app
 
-# Copy backend built files and dependencies
-COPY --from=backend-builder /app/backend/dist ./dist
-COPY --from=backend-builder /app/backend/node_modules ./node_modules
+# Copy package files first
 COPY --from=backend-builder /app/backend/package*.json ./
+
+# Install only production dependencies
+RUN npm ci --only=production
+
+# Copy backend built files
+COPY --from=backend-builder /app/backend/dist ./dist
 
 # Copy frontend built files to be served by backend
 COPY --from=frontend-builder /app/frontend/dist ./public

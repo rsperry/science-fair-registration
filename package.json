@@ -21,7 +21,7 @@
     "docker:logs": "docker logs -f science-fair"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^9.2.1"
   },
   "engines": {
     "node": ">=24.0.0",

@@ -13,7 +13,7 @@ router.post('/register', async (req: Request, res: Response) => {
     if (!validationResult.success) {
       return res.status(400).json({
         success: false,
-        errors: validationResult.error.errors.map((err) => ({
+        errors: validationResult.error.issues.map((err) => ({
           field: err.path.join('.'),
           message: err.message,
         })),
