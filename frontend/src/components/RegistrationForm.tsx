@@ -257,7 +257,10 @@ const RegistrationForm = () => {
             handleChange('teacher', selectedValue);
             handleChange('grade', selectedTeacher?.grade || '');
             // Focus on project name field after selection
-            setTimeout(() => projectNameRef.current?.focus(), 0);
+            requestAnimationFrame(() => {
+              projectNameRef.current?.focus();
+              projectNameRef.current?.click();
+            });
           }}
           label="Teacher"
           inputProps={{ 'aria-label': 'Teacher' }}
@@ -384,7 +387,10 @@ const RegistrationForm = () => {
                 const selectedTeacher = teachers.find(t => t.name === selectedValue);
                 handleAdditionalStudentTeacherChange(index, selectedValue, selectedTeacher?.grade || '');
                 // Focus on parent name field after selection
-                setTimeout(() => additionalStudentParentRefs.current[index]?.focus(), 0);
+                requestAnimationFrame(() => {
+                  additionalStudentParentRefs.current[index]?.focus();
+                  additionalStudentParentRefs.current[index]?.click();
+                });
               }}
               label="Teacher"
               inputProps={{ 'aria-label': `Student ${index + 2} Teacher` }}
