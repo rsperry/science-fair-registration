@@ -5,7 +5,7 @@ Use this checklist to verify your setup is complete and working correctly.
 ## ✅ Prerequisites
 
 - [ ] Node.js 24+ installed
-- [ ] npm 9+ installed  
+- [ ] npm 10+ installed  
 - [ ] Google Cloud account created
 - [ ] Git installed (optional, for version control)
 
@@ -34,18 +34,19 @@ Use this checklist to verify your setup is complete and working correctly.
 
 ## ✅ Dependencies Installation
 
+- [ ] All dependencies installed (`npm run install:all`)
+  OR
 - [ ] Root dependencies installed (`npm install`)
 - [ ] Backend dependencies installed (`cd backend && npm install`)
 - [ ] Frontend dependencies installed (`cd frontend && npm install`)
-  OR
-- [ ] All dependencies installed (`npm run install:all`)
 
 ## ✅ Development Server
 
+
+- [ ] Both start together (`npm run dev`)
+  OR
 - [ ] Backend starts without errors (`npm run dev:backend`)
 - [ ] Frontend starts without errors (`npm run dev:frontend`)
-  OR
-- [ ] Both start together (`npm run dev`)
 - [ ] Backend accessible at http://localhost:4000
 - [ ] Frontend accessible at http://localhost:5173
 - [ ] Health check endpoint works: http://localhost:4000/health
@@ -66,7 +67,6 @@ Use this checklist to verify your setup is complete and working correctly.
 - [ ] Form submits successfully
 - [ ] Confirmation page displays with:
   - [ ] Project ID
-  - [ ] Registration ID
   - [ ] Timestamp
 - [ ] Data appears in Google Sheet
 - [ ] Primary record has "TRUE" in Primary Project Record column
@@ -87,6 +87,9 @@ Use this checklist to verify your setup is complete and working correctly.
 - [ ] Frontend tests pass (`cd frontend && npm test`)
   OR
 - [ ] All tests pass (`npm test`)
+- [ ] Backend linting passes (`cd backend && npm run lint`)
+- [ ] Frontend linting passes (`cd frontend && npm run lint`)
+  OR
 - [ ] No linting errors (`npm run lint`)
 
 ## ✅ Docker (Optional)

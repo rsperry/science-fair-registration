@@ -1,3 +1,5 @@
+[![CI/CD Pipeline](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml/badge.svg)](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml)
+
 # Science Fair Registration Application
 
 A full-stack web application for managing science fair project registrations. Built with React, TypeScript, Material-UI on the frontend and Node.js, Express, TypeScript on the backend, with Google Sheets as the data storage backend.
@@ -17,12 +19,12 @@ A full-stack web application for managing science fair project registrations. Bu
 ## Tech Stack
 
 ### Frontend
-- React 18 with TypeScript
+- React 19 with TypeScript
 - Vite for fast development and building
 - Material-UI (MUI) v5 for components
-- React Router for navigation
+- React Router v7 for navigation
 - Axios for API calls
-- Zod for validation
+- Zod v4 for validation
 
 ### Backend
 - Node.js with TypeScript
@@ -35,7 +37,7 @@ A full-stack web application for managing science fair project registrations. Bu
 
 ### DevOps & Testing
 - Jest for unit and integration testing
-- Docker & Docker Compose
+- Docker
 - GitHub Actions for CI/CD
 - ESLint & Prettier for code quality
 
@@ -51,6 +53,7 @@ science-fair-registration/
 │   │   ├── styles/       # MUI theme
 │   │   ├── types/        # TypeScript types
 │   │   └── config/       # Configuration
+│   ├── tests/
 │   ├── Dockerfile
 │   └── package.json
 ├── backend/              # Node.js backend
@@ -62,20 +65,20 @@ science-fair-registration/
 │   │   ├── validation/   # Zod schemas
 │   │   ├── app.ts        # Express app
 │   │   └── server.ts     # Server entry point
+│   ├── tests/
 │   ├── Dockerfile
 │   └── package.json
 ├── .github/
 │   └── workflows/
 │       └── ci.yml        # GitHub Actions
-├── docker-compose.yml
 ├── .env.example
 └── README.md
 ```
 
 ## Prerequisites
 
-- Node.js >= 18.0.0
-- npm >= 9.0.0
+- Node.js >= 24.0.0
+- npm >= 10.0.0
 - Google Cloud Platform account (for Google Sheets API)
 - Docker (optional, for containerized deployment)
 
@@ -118,29 +121,40 @@ cd science-fair-registration
    - Project ID
    - Project Name
    - Primary Project Record
-   - Student Name
-   - Teacher
-   - Parent/Guardian Name
-   - Parent/Guardian Email
+   - Student 1 Name
+   - Student 1 Teacher
+   - Student 1 Grade
+   - Student 1 Parent Name
+   - Student 1 Parent Email
    - Student 2 Name
    - Student 2 Teacher
-   - Student 2 Parent/Guardian Name
-   - Student 2 Parent/Guardian Email
+   - Student 2 Grade
+   - Student 2 Parent Name
+   - Student 2 Parent Email
    - Student 3 Name
    - Student 3 Teacher
-   - Student 3 Parent/Guardian Name
-   - Student 3 Parent/Guardian Email
+   - Student 3 Grade
+   - Student 3 Parent Name
+   - Student 3 Parent Email
    - Student 4 Name
    - Student 4 Teacher
-   - Student 4 Parent/Guardian Name
-   - Student 4 Parent/Guardian Email
+   - Student 4 Grade
+   - Student 4 Parent Name
+   - Student 4 Parent Email
    - Timestamp
-   - Registration ID
 
-3. (Optional) Create a second sheet named "Teachers" with teacher names in column A
-4. Share the spreadsheet with the service account email address (found in the JSON key file)
+3. Create a second sheet named "Teachers" with following headers:
+   - Teacher
+   - Grade
+4. Populate Teachers sheet with all teacher names/grades
+5. Create a third sheet named Info with following in column A and and data in column B:
+   - School
+   - Contact
+   - Registration Deadline
+   - Science Fair Date
+6. Share the spreadsheet with the service account email address (found in the JSON key file)
    - Give it "Editor" permissions
-5. Copy the Spreadsheet ID from the URL (the long string between `/d/` and `/edit`)
+7. Copy the Spreadsheet ID from the URL (the long string between `/d/` and `/edit`)
 
 ### 3. Environment Configuration
 
@@ -235,14 +249,6 @@ Frontend only:
 npm run dev:frontend
 ```
 
-### Using Docker Compose
-
-```bash
-docker-compose up
-```
-
-This will build and start both services in containers.
-
 ## Testing
 
 ### Run All Tests
@@ -304,21 +310,13 @@ npx serve -s dist
 1. Build Docker images:
 
 ```bash
-# Backend
-docker build -t science-fair-backend ./backend
-
-# Frontend
-docker build -t science-fair-frontend ./frontend
+npm run docker:build
 ```
 
 2. Run containers:
 
 ```bash
-# Backend
-docker run -p 4000:4000 --env-file .env science-fair-backend
-
-# Frontend
-docker run -p 80:80 science-fair-frontend
+npm run docker:run
 ```
 
 ### Deploy to Cloud Platforms
@@ -342,21 +340,11 @@ cd frontend
 vercel --prod
 ```
 
-Set environment variable:
-- `VITE_API_URL`: Your backend API URL
-
 #### Google Cloud Run
 
 ```bash
-# Backend
-gcloud run deploy science-fair-backend \
-  --source ./backend \
-  --region us-central1 \
-  --allow-unauthenticated
-
-# Frontend
-gcloud run deploy science-fair-frontend \
-  --source ./frontend \
+gcloud run deploy science-fair \
+  --source ./ \
   --region us-central1 \
   --allow-unauthenticated
 ```
@@ -444,14 +432,6 @@ The application follows WCAG 2.1 guidelines:
 - Color contrast compliance
 - Screen reader compatibility
 
-## Privacy & Data Handling
-
-- Registration data is stored in Google Sheets
-- Only authorized personnel can access the spreadsheet
-- Parent/guardian consent is required for registration
-- Contact information is used only for science fair administration
-- For data deletion requests, contact: sciencefair@school.edu
-
 ## Troubleshooting
 
 ### Common Issues
@@ -486,6 +466,4 @@ MIT License - see LICENSE file for details
 ## Support
 
 For questions or issues:
-- Email: sciencefair@school.edu
-- Phone: (555) 123-4567
 - Create an issue in the GitHub repository

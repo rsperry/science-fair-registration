@@ -3,9 +3,9 @@
 ## Quick Setup (5 minutes)
 
 ### 1. Install Node.js
-Make sure you have Node.js 18+ installed:
+Make sure you have Node.js 24+ installed:
 ```bash
-node --version  # Should be 18.0.0 or higher
+node --version  # Should be 24.0.0 or higher
 ```
 
 ### 2. Install Dependencies
@@ -76,9 +76,6 @@ Visit:
 - Check that the Sheet ID is correct
 - Ensure the JSON key is properly encoded
 
-**CORS errors?**
-- Make sure FRONTEND_ORIGIN in .env matches http://localhost:5173
-
 ## Support
 
-Need help? Check the main README.md or contact sciencefair@school.edu
+Need help? Check the main README.md for troubleshooting or create an issue in the GitHub repository.
