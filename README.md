@@ -1,5 +1,7 @@
 [![CI/CD Pipeline](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml/badge.svg)](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml)
 
++ [![cov](https://rsperry.github.io/science-fair-registration/badges/coverage.svg)](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml)
+
 # Science Fair Registration Application
 
 A full-stack web application for managing science fair project registrations. Built with React, TypeScript, Material-UI on the frontend and Node.js, Express, TypeScript on the backend, with Google Sheets as the data storage backend.
