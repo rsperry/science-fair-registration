@@ -1,0 +1,86 @@
+{
+  "info": {
+    "name": "Science Fair Registration API",
+    "description": "API endpoints for science fair project registration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register Project",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"studentName\": \"John Doe\",\n  \"teacher\": \"Mrs. Smith\",\n  \"projectName\": \"Volcano Experiment\",\n  \"parentGuardianName\": \"Jane Doe\",\n  \"parentGuardianEmail\": \"jane@example.com\",\n  \"consentGiven\": true,\n  \"additionalStudents\": []\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "register"]
+        },
+        "description": "Register a new science fair project"
+      }
+    },
+    {
+      "name": "Register Group Project",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"studentName\": \"John Doe\",\n  \"teacher\": \"Mrs. Smith\",\n  \"projectName\": \"Group Project\",\n  \"parentGuardianName\": \"Jane Doe\",\n  \"parentGuardianEmail\": \"jane@example.com\",\n  \"consentGiven\": true,\n  \"additionalStudents\": [\n    {\n      \"studentName\": \"Alice Smith\",\n      \"teacher\": \"Mr. Johnson\",\n      \"parentGuardianName\": \"Bob Smith\",\n      \"parentGuardianEmail\": \"bob@example.com\"\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "register"]
+        },
+        "description": "Register a group science fair project with additional students"
+      }
+    },
+    {
+      "name": "Get Teachers",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/teachers",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "teachers"]
+        },
+        "description": "Get list of available teachers"
+      }
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Check API health status"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000",
+      "type": "string"
+    }
+  ]
+}
