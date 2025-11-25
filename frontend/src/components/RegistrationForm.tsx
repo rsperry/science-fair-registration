@@ -64,7 +64,7 @@ const RegistrationForm = () => {
     }
   };
 
-  const handleChange = (field: keyof RegistrationFormData, value: any) => {
+  const handleChange = (field: keyof RegistrationFormData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear field error when user starts typing
     if (fieldErrors[field]) {

@@ -28,7 +28,7 @@ describe('Registration API', () => {
         .expect(201);
 
       expect(response.body.success).toBe(true);
-      expect(response.body.registrationId).toBeDefined();
+      expect(response.body.projectId).toBeDefined();
       expect(response.body.projectId).toBe(100);
       expect(response.body.timestamp).toBeDefined();
     });

@@ -4,22 +4,21 @@
   "description": "Science Fair Registration Application with React Frontend and Node.js Backend",
   "private": true,
   "scripts": {
-    "start": "concurrently \"npm run start:backend\" \"npm run dev:frontend\"",
-    "start:backend": "cd backend && npm start",
-    "start:frontend": "cd frontend && npm run preview",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
     "build": "npm run build:frontend && npm run build:backend",
-    "build:frontend": "cd frontend && npm run build",
     "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
     "test": "npm run test:backend && npm run test:frontend",
     "test:backend": "cd backend && npm test",
     "test:frontend": "cd frontend && npm test",
-    "lint": "npm run lint:backend && npm run lint:frontend",
-    "lint:backend": "cd backend && npm run lint",
-    "lint:frontend": "cd frontend && npm run lint",
-    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+    "lint": "cd backend && npm run lint && cd ../frontend && npm run lint",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "docker:build": "docker build -t science-fair-registration .",
+    "docker:run": "docker run -d -p 4000:4000 --env-file .env --name science-fair science-fair-registration",
+    "docker:stop": "docker stop science-fair && docker rm science-fair",
+    "docker:logs": "docker logs -f science-fair"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

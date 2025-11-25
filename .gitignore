@@ -39,3 +39,4 @@ Thumbs.db
 # Misc
 *.pem
 .cache/
+setup_new.ps1

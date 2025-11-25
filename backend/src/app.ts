@@ -2,13 +2,16 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
 import { config } from './config';
 import registerRoutes from './routes/register';
 
 const app: Application = express();
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false, // Allow frontend assets to load
+}));
 
 // CORS configuration
 app.use(
@@ -49,13 +52,24 @@ app.get('/health', (_req: Request, res: Response) => {
 // API routes
 app.use('/api', registerRoutes);
 
-// 404 handler
-app.use((_req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    message: 'Endpoint not found',
+// Serve static frontend files in production
+if (config.nodeEnv === 'production') {
+  const publicPath = path.join(__dirname, '..', 'public');
+  app.use(express.static(publicPath));
+  
+  // Handle client-side routing - serve index.html for all non-API routes
+  app.get('*', (_req: Request, res: Response) => {
+    res.sendFile(path.join(publicPath, 'index.html'));
   });
-});
+} else {
+  // 404 handler for development (API only)
+  app.use((_req: Request, res: Response) => {
+    res.status(404).json({
+      success: false,
+      message: 'Endpoint not found',
+    });
+  });
+}
 
 // Error handler
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
