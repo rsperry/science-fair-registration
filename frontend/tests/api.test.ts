@@ -83,7 +83,7 @@ describe('API Service', () => {
       };
 
       mockPost.mockRejectedValue(axiosError);
-      (mockedAxios.isAxiosError as any) = jest.fn().mockReturnValue(true);
+      (mockedAxios.isAxiosError as unknown as jest.Mock) = jest.fn().mockReturnValue(true);
 
       await expect(registerProject(mockFormData)).rejects.toEqual(errorResponse);
     });
@@ -102,7 +102,7 @@ describe('API Service', () => {
       const networkError = new Error('Network Error');
 
       mockPost.mockRejectedValue(networkError);
-      (mockedAxios.isAxiosError as any) = jest.fn().mockReturnValue(false);
+      (mockedAxios.isAxiosError as unknown as jest.Mock) = jest.fn().mockReturnValue(false);
 
       await expect(registerProject(mockFormData)).rejects.toEqual({
         success: false,

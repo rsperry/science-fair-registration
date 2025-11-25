@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import request from 'supertest';
 import app from '../src/app';
 
@@ -229,7 +230,7 @@ describe('Registration API', () => {
 
       expect(response.body.success).toBe(false);
       expect(response.body.errors).toBeDefined();
-      expect(response.body.errors.some((e: any) => e.field.includes('parentGuardianEmail'))).toBe(true);
+      expect(response.body.errors.some((e: { field: string }) => e.field.includes('parentGuardianEmail'))).toBe(true);
     });
   });
 

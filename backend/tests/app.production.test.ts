@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // Test production mode branches separately
 describe('App Production Mode', () => {
   let originalNodeEnv: string | undefined;

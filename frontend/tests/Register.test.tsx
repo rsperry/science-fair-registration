@@ -298,7 +298,7 @@ describe('Register Page', () => {
     // This tests the catch block in isRegistrationClosed
     mockGetFairMetadata.mockResolvedValue({
       school: 'Test School',
-      registrationDeadline: null as any, // Force an exception
+      registrationDeadline: null as unknown as string, // Force an exception
       contactEmail: 'test@school.edu',
       scienceFairDate: '2026-02-15',
     });

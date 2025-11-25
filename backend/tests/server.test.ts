@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { Server } from 'http';
 
 // Mock dependencies before importing server
