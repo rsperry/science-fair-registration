@@ -57,8 +57,14 @@ if (config.nodeEnv === 'production') {
   const publicPath = path.join(__dirname, '..', 'public');
   app.use(express.static(publicPath));
   
-  // Handle client-side routing - serve index.html for all non-API routes
-  app.get('*', (_req: Request, res: Response) => {
+  // Handle client-side routing - serve index.html for root and other routes
+  // This must come after API and health routes to avoid overriding them
+  app.use((_req: Request, res: Response, next: NextFunction) => {
+    // Skip if it's an API or health route
+    if (_req.path.startsWith('/api') || _req.path === '/health') {
+      return next();
+    }
+    // Serve index.html for all other routes (SPA routing)
     res.sendFile(path.join(publicPath, 'index.html'));
   });
 } else {

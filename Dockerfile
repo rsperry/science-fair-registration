@@ -9,7 +9,6 @@ WORKDIR /app/frontend
 COPY frontend/package*.json ./
 COPY frontend/tsconfig*.json ./
 COPY frontend/vite.config.ts ./
-RUN ls -la .
 RUN npm ci
 
 COPY frontend/ ./

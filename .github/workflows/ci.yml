@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main, develop]
 
+env:
+  GOOGLE_SHEETS_ID: 'sample'
+
 jobs:
   backend-test:
     name: Backend - Lint & Test
