@@ -8,6 +8,7 @@ on:
 
 env:
   GOOGLE_SHEETS_ID: 'sample'
+  GOOGLE_SERVICE_ACCOUNT_KEY_PATH: 'test'
 
 jobs:
   backend-test:
