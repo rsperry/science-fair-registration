@@ -66,11 +66,7 @@ const Register = () => {
             {loading ? '' : `${schoolName} `}Science Fair Project Registration
           </Typography>
           
-          {loading ? (
-            <Typography variant="body1" align="center" color="text.secondary" paragraph>
-              Loading...
-            </Typography>
-          ) : isRegistrationClosed() ? (
+          {!loading && isRegistrationClosed() ? (
             <Box sx={{ textAlign: 'center', py: 4 }}>
               <Typography variant="h5" color="error" gutterBottom>
                 Registration Closed
@@ -79,7 +75,7 @@ const Register = () => {
                 Registration closed on {formatDate(registrationDeadline)}.
               </Typography>
               <Typography variant="body2" color="text.secondary" paragraph>
-                Please contact {contactEmail || 'sciencefair@school.edu'} if you have questions.
+                Please contact {contactEmail || ''} if you have questions.
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
                 <Button

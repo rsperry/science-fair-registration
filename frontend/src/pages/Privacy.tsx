@@ -1,4 +1,4 @@
-import { Container, Box, Typography, Paper, Button } from '@mui/material';
+import { Container, Box, Typography, Paper, Button, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import { useEffect, useState } from 'react';
@@ -7,10 +7,11 @@ import { getFairMetadata } from '../services/api';
 const Privacy = () => {
   const navigate = useNavigate();
   const [metadata, setMetadata] = useState({
-    school: 'School',
-    contactEmail: 'sciencefair@school.edu',
+    school: '',
+    contactEmail: '',
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const loadMetadata = async () => {
@@ -20,8 +21,10 @@ const Privacy = () => {
           school: data.school,
           contactEmail: data.contactEmail,
         });
+        setError(false);
       } catch (error) {
         console.error('Failed to load metadata:', error);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -149,7 +152,15 @@ const Privacy = () => {
           <Typography variant="body1" paragraph>
             If you have questions about this privacy policy, wish to exercise your rights, or need to request 
             data deletion, please contact us at:{' '}
-            <strong>{loading ? 'sciencefair@school.edu' : metadata.contactEmail}</strong>
+            <strong>
+              {error ? (
+                'Contact information unavailable'
+              ) : loading ? (
+                <CircularProgress size={14} sx={{ ml: 1 }} />
+              ) : (
+                metadata.contactEmail
+              )}
+            </strong>
           </Typography>
 
           <Typography variant="body2" color="text.secondary" sx={{ mt: 4 }} paragraph>

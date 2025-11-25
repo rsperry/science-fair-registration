@@ -31,6 +31,7 @@ const RegistrationForm = () => {
   const [showError, setShowError] = useState(false);
   const [teachers, setTeachers] = useState<Array<{ name: string; grade: string }>>([]);
   const [loadingTeachers, setLoadingTeachers] = useState(true);
+  const [teachersError, setTeachersError] = useState(false);
 
   const [formData, setFormData] = useState<RegistrationFormData>({
     studentName: '',
@@ -57,8 +58,10 @@ const RegistrationForm = () => {
     try {
       const teachersList = await getTeachers();
       setTeachers(teachersList);
+      setTeachersError(false);
     } catch (err) {
       console.error('Failed to load teachers:', err);
+      setTeachersError(true);
     } finally {
       setLoadingTeachers(false);
     }
@@ -218,6 +221,12 @@ const RegistrationForm = () => {
         Primary Student Information
       </Typography>
 
+      {teachersError && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          Unable to load teacher list. Please refresh the page or contact support.
+        </Alert>
+      )}
+
       <TextField
         fullWidth
         required
@@ -252,25 +261,30 @@ const RegistrationForm = () => {
           }}
           label="Teacher"
           inputProps={{ 'aria-label': 'Teacher' }}
+          startAdornment={loadingTeachers ? <CircularProgress size={20} sx={{ mr: 1 }} /> : null}
         >
-          {teachers
-            .sort((a, b) => {
-              // Sort by grade first (letters before numbers), then by name
-              const gradeA = a.grade.toUpperCase();
-              const gradeB = b.grade.toUpperCase();
-              const isNumA = !isNaN(Number(gradeA));
-              const isNumB = !isNaN(Number(gradeB));
-              
-              if (isNumA && !isNumB) return 1; // Numbers after letters
-              if (!isNumA && isNumB) return -1; // Letters before numbers
-              if (gradeA !== gradeB) return gradeA.localeCompare(gradeB);
-              return a.name.localeCompare(b.name);
-            })
-            .map((teacher) => (
-              <MenuItem key={teacher.name} value={teacher.name}>
-                {teacher.grade} - {teacher.name}
-              </MenuItem>
-            ))}
+          {loadingTeachers ? (
+            <MenuItem disabled>Loading teachers...</MenuItem>
+          ) : (
+            teachers
+              .sort((a, b) => {
+                // Sort by grade first (letters before numbers), then by name
+                const gradeA = a.grade.toUpperCase();
+                const gradeB = b.grade.toUpperCase();
+                const isNumA = !isNaN(Number(gradeA));
+                const isNumB = !isNaN(Number(gradeB));
+                
+                if (isNumA && !isNumB) return 1; // Numbers after letters
+                if (!isNumA && isNumB) return -1; // Letters before numbers
+                if (gradeA !== gradeB) return gradeA.localeCompare(gradeB);
+                return a.name.localeCompare(b.name);
+              })
+              .map((teacher) => (
+                <MenuItem key={teacher.name} value={teacher.name}>
+                  {teacher.grade} - {teacher.name}
+                </MenuItem>
+              ))
+          )}
         </Select>
         {fieldErrors.teacher && <FormHelperText>{fieldErrors.teacher}</FormHelperText>}
       </FormControl>
@@ -374,24 +388,29 @@ const RegistrationForm = () => {
               }}
               label="Teacher"
               inputProps={{ 'aria-label': `Student ${index + 2} Teacher` }}
+              startAdornment={loadingTeachers ? <CircularProgress size={20} sx={{ mr: 1 }} /> : null}
             >
-              {teachers
-                .sort((a, b) => {
-                  const gradeA = a.grade.toUpperCase();
-                  const gradeB = b.grade.toUpperCase();
-                  const isNumA = !isNaN(Number(gradeA));
-                  const isNumB = !isNaN(Number(gradeB));
-                  
-                  if (isNumA && !isNumB) return 1;
-                  if (!isNumA && isNumB) return -1;
-                  if (gradeA !== gradeB) return gradeA.localeCompare(gradeB);
-                  return a.name.localeCompare(b.name);
-                })
-                .map((teacher) => (
-                  <MenuItem key={teacher.name} value={teacher.name}>
-                    {teacher.grade} - {teacher.name}
-                  </MenuItem>
-                ))}
+              {loadingTeachers ? (
+                <MenuItem disabled>Loading teachers...</MenuItem>
+              ) : (
+                teachers
+                  .sort((a, b) => {
+                    const gradeA = a.grade.toUpperCase();
+                    const gradeB = b.grade.toUpperCase();
+                    const isNumA = !isNaN(Number(gradeA));
+                    const isNumB = !isNaN(Number(gradeB));
+                    
+                    if (isNumA && !isNumB) return 1;
+                    if (!isNumA && isNumB) return -1;
+                    if (gradeA !== gradeB) return gradeA.localeCompare(gradeB);
+                    return a.name.localeCompare(b.name);
+                  })
+                  .map((teacher) => (
+                    <MenuItem key={teacher.name} value={teacher.name}>
+                      {teacher.grade} - {teacher.name}
+                    </MenuItem>
+                  ))
+              )}
             </Select>
             {fieldErrors[`additionalStudent${index}.teacher`] && (
               <FormHelperText>{fieldErrors[`additionalStudent${index}.teacher`]}</FormHelperText>
@@ -480,7 +499,7 @@ const RegistrationForm = () => {
           type="submit"
           variant="contained"
           size="large"
-          disabled={loading}
+          disabled={loading || teachersError}
           sx={{ minWidth: 200 }}
         >
           {loading ? <CircularProgress size={24} /> : 'Submit Registration'}

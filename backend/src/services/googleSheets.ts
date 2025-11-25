@@ -129,15 +129,7 @@ export class GoogleSheetsService {
         }));
     } catch (error) {
       console.error('Error fetching teachers:', error);
-      // Return default list if sheet doesn't exist
-      return [
-        { name: 'Mrs. Smith', grade: '3' },
-        { name: 'Mr. Johnson', grade: '4' },
-        { name: 'Ms. Williams', grade: '5' },
-        { name: 'Dr. Brown', grade: 'K' },
-        { name: 'Mrs. Davis', grade: '1' },
-        { name: 'Mr. Wilson', grade: '2' },
-      ];
+      throw new Error('Failed to fetch teachers from Google Sheets. Please ensure the Teachers sheet exists.');
     }
   }
 
@@ -169,13 +161,7 @@ export class GoogleSheetsService {
       };
     } catch (error) {
       console.error('Error fetching fair metadata:', error);
-      // Return defaults if Info sheet doesn't exist
-      return {
-        school: 'School',
-        contactEmail: 'sciencefair@school.edu',
-        registrationDeadline: 'December 15, 2025',
-        scienceFairDate: 'February 10, 2026',
-      };
+      throw new Error('Failed to fetch fair metadata from Google Sheets. Please ensure the Info sheet exists with required fields.');
     }
   }
 }
