@@ -1,7 +1,6 @@
 import { google } from 'googleapis';
 import { config } from '../config';
 import { SheetRow } from '../types/registration';
-import * as fs from 'fs';
 
 export class GoogleSheetsService {
   private sheets;
@@ -12,18 +11,10 @@ export class GoogleSheetsService {
   }
 
   private initializeClient() {
-    let credentials;
-
-    if (config.googleServiceAccountKeyPath) {
-      // Load from file path
-      const keyFile = fs.readFileSync(config.googleServiceAccountKeyPath, 'utf8');
-      credentials = JSON.parse(keyFile);
-    } else {
-      // Decode from base64 (remove whitespace/newlines first)
-      const cleanBase64 = config.googleServiceAccountKey.replace(/\s/g, '');
-      const decoded = Buffer.from(cleanBase64, 'base64').toString('utf8');
-      credentials = JSON.parse(decoded);
-    }
+    // Decode from base64 (remove whitespace/newlines first)
+    const cleanBase64 = config.googleServiceAccountKey.replace(/\s/g, '');
+    const decoded = Buffer.from(cleanBase64, 'base64').toString('utf8');
+    const credentials = JSON.parse(decoded);
 
     const auth = new google.auth.GoogleAuth({
       credentials,

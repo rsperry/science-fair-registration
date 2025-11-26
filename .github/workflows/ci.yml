@@ -8,7 +8,7 @@ on:
 
 env:
   GOOGLE_SHEETS_ID: 'sample'
-  GOOGLE_SERVICE_ACCOUNT_KEY_PATH: 'test'
+  GOOGLE_SERVICE_ACCOUNT_KEY_BASE64: 'dGVzdA=='
 
 jobs:
   lint-test:

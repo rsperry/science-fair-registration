@@ -49,6 +49,33 @@ describe('RegistrationForm Component', () => {
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 
+  it('should display loading spinner in additional student teacher select when loading', async () => {
+    mockedApi.getTeachers.mockImplementation(() => new Promise(() => {})); // Never resolves
+    const user = userEvent.setup();
+
+    render(
+      <BrowserRouter>
+        <RegistrationForm />
+      </BrowserRouter>
+    );
+
+    // Wait for the initial progressbar
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+
+    // The "Add Group Member" button should be visible even while loading
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Add Group Member/i })).toBeInTheDocument();
+    });
+
+    // Add an additional student
+    const addButton = screen.getByRole('button', { name: /Add Group Member/i });
+    await user.click(addButton);
+
+    // Now there should be 2 progressbars (one for primary, one for additional student)
+    const progressBars = screen.getAllByRole('progressbar');
+    expect(progressBars.length).toBe(2);
+  });
+
   it('should display error alert when teachers fail to load', async () => {
     mockedApi.getTeachers.mockRejectedValue(new Error('Failed to load teachers'));
 
@@ -254,6 +281,11 @@ describe('RegistrationForm Component', () => {
       expect(screen.getByLabelText(/^Student Name$/i)).toBeInTheDocument();
     });
 
+    // Wait for teachers to load (loading spinner should disappear)
+    await waitFor(() => {
+      expect(screen.queryByText(/Loading teachers.../i)).not.toBeInTheDocument();
+    });
+
     await user.type(screen.getByLabelText(/^Student Name$/i), 'John Doe');
     await user.click(screen.getByLabelText(/Teacher/i));
     await user.click(screen.getByText(/Mrs. Smith/));
@@ -365,6 +397,11 @@ describe('RegistrationForm Component', () => {
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /Add Group Member/i })).toBeInTheDocument();
+    });
+
+    // Wait for teachers to load (loading spinner should disappear)
+    await waitFor(() => {
+      expect(screen.queryByText(/Loading teachers.../i)).not.toBeInTheDocument();
     });
 
     // Add an additional student
@@ -660,6 +697,48 @@ describe('RegistrationForm Component', () => {
     });
   });
 
+  it('should sort teachers with same letter and number grades by name', async () => {
+    const teachersWithSameGrades = [
+      { name: 'Teacher 4', grade: 'A' },
+      { name: 'Teacher 1', grade: '2' },
+      { name: 'Teacher 3', grade: '3' },
+      { name: 'Teacher 6', grade: '1' },
+      { name: 'Teacher 2', grade: 'K' },
+      { name: 'Teacher 1', grade: 'K' },
+      { name: 'Teacher 8', grade: '1' },
+      { name: 'Teacher 7', grade: '1' },
+      { name: 'Teacher 5', grade: '1' },
+    ];
+    mockedApi.getTeachers.mockResolvedValue(teachersWithSameGrades);
+
+    render(
+      <BrowserRouter>
+        <RegistrationForm />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/^Teacher$/i)).toBeInTheDocument();
+    });
+
+    const user = userEvent.setup();
+    await user.click(screen.getByLabelText(/^Teacher$/i));
+
+    await waitFor(() => {
+      const options = screen.getAllByRole('option');
+      // Should be sorted: K grades first (alphabetically by name), then numeric grades (alphabetically by name)
+      expect(options[0]).toHaveTextContent('A - Teacher 4');
+      expect(options[1]).toHaveTextContent('K - Teacher 1');
+      expect(options[2]).toHaveTextContent('K - Teacher 2');
+      expect(options[3]).toHaveTextContent('1 - Teacher 5');
+      expect(options[4]).toHaveTextContent('1 - Teacher 6');
+      expect(options[5]).toHaveTextContent('1 - Teacher 7');
+      expect(options[6]).toHaveTextContent('1 - Teacher 8');
+      expect(options[7]).toHaveTextContent('2 - Teacher 1');
+      expect(options[8]).toHaveTextContent('3 - Teacher 3');
+    });
+  });
+
   it('should sort teachers with mixed letter and number grades correctly', async () => {
     const teachersWithMixedGrades = [
       { name: 'Mrs. Third', grade: '3' },
@@ -763,6 +842,50 @@ describe('RegistrationForm Component', () => {
       expect(options[0]).toHaveTextContent('A - Ms. Advanced');
       expect(options[1]).toHaveTextContent('K - Mr. Kinder');
       expect(options[2]).toHaveTextContent('P - Mrs. PreK');
+    });
+  });
+
+  it('should handle teacher selection when grade is undefined or empty', async () => {
+    const teachersWithMissingGrades = [
+      { name: 'Mrs. Smith', grade: '3' },
+      { name: 'Mr. NoGrade', grade: '' },
+    ];
+    mockedApi.getTeachers.mockResolvedValue(teachersWithMissingGrades);
+    const user = userEvent.setup();
+
+    render(
+      <BrowserRouter>
+        <RegistrationForm />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/^Teacher$/i)).toBeInTheDocument();
+    });
+
+    // Add an additional student to test both code paths
+    const addButton = screen.getByRole('button', { name: /Add Group Member/i });
+    await user.click(addButton);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Student 2 Teacher/i)).toBeInTheDocument();
+    });
+
+    // Select teacher with no grade for primary student
+    await user.click(screen.getByLabelText(/^Teacher$/i));
+    await user.click(screen.getByText(/Mr. NoGrade/));
+
+    // Verify grade defaults to empty string when teacher grade is undefined/empty
+    await waitFor(() => {
+      expect(screen.getByLabelText(/^Teacher$/i)).toHaveTextContent('Mr. NoGrade');
+    });
+
+    // Select teacher with no grade for additional student
+    await user.click(screen.getByLabelText(/Student 2 Teacher/i));
+    await user.click(screen.getAllByText(/Mr. NoGrade/)[1]);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Student 2 Teacher/i)).toHaveTextContent('Mr. NoGrade');
     });
   });
 });
