@@ -1,17 +1,42 @@
 name: Coverage
 
 on:
-    pull_request_target:
-        branches: [main, develop]
+  pull_request:
+    branches:
+      - main
 
 jobs:
-    coverage:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
+  coverage:
+    permissions:
+      # Necessary permissions for the action to comment on PRs and write checks/contents
+      checks: write
+      pull-requests: write
+      contents: write
 
-            - name: Install dependencies
-              run: npm run install:all
-              
-            - name: Run tests with coverage
-            - uses: ArtiomTr/jest-coverage-report-action@v2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Use a stable, supported Node version
+          cache: 'npm' # Cache dependencies for faster installs
+
+      - name: Custom dependency installation
+        run: npm run install:all
+
+      - name: Custom test run with coverage
+        run: npm test
+
+      - name: Jest coverage report
+        # It's recommended to use the StepSecurity maintained action for better security
+        uses: step-security/jest-coverage-report-action@v2
+        with:
+          # Skips the action's built-in install and test steps since they were done manually
+          skip-step: all 
+          # Specifies the script you already ran, confirming no re-run is needed
+          test-script: 'npm test' 
+          # The action automatically finds and reads the generated report file
