@@ -10,10 +10,10 @@ try {
     $nodeVersion = node --version
     Write-Host "✓ Node.js version: $nodeVersion" -ForegroundColor Green
     
-    # Check if version is 18 or higher (updated to 24 recommended)
+    # Check if version is 20 or higher (updated to 24 recommended)
     $version = [int]($nodeVersion -replace 'v(\d+)\..*', '$1')
-    if ($version -lt 18) {
-        Write-Host "✗ Node.js version 18 or higher is required (24 recommended)" -ForegroundColor Red
+    if ($version -lt 20) {
+        Write-Host "✗ Node.js version 20 or higher is required (24 recommended)" -ForegroundColor Red
         Write-Host "Please install from https://nodejs.org/" -ForegroundColor Yellow
         exit 1
     } elseif ($version -lt 24) {

@@ -79,7 +79,7 @@ science-fair-registration/
 
 ## Prerequisites
 
-- Node.js >= 24.0.0
+- Node.js >= 20.0.0
 - npm >= 10.0.0
 - Google Cloud Platform account (for Google Sheets API)
 - Docker (optional, for containerized deployment)

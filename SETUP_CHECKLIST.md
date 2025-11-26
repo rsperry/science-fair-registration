@@ -4,7 +4,7 @@ Use this checklist to verify your setup is complete and working correctly.
 
 ## ✅ Prerequisites
 
-- [ ] Node.js 24+ installed
+- [ ] Node.js 20+ installed
 - [ ] npm 10+ installed  
 - [ ] Google Cloud account created
 - [ ] Git installed (optional, for version control)
