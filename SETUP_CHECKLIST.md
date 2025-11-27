@@ -4,7 +4,7 @@ Use this checklist to verify your setup is complete and working correctly.
 
 ## ✅ Prerequisites
 
-- [ ] Node.js 24+ installed
+- [ ] Node.js 20+ installed
 - [ ] npm 10+ installed  
 - [ ] Google Cloud account created
 - [ ] Git installed (optional, for version control)
@@ -27,8 +27,6 @@ Use this checklist to verify your setup is complete and working correctly.
 - [ ] GOOGLE_SHEETS_ID set in .env
 - [ ] Service account key encoded to base64
 - [ ] GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 set in .env
-  OR
-- [ ] GOOGLE_SERVICE_ACCOUNT_KEY_PATH set in .env
 - [ ] PORT configured (default: 4000)
 - [ ] FRONTEND_ORIGIN configured (default: http://localhost:5173)
 - [ ] RATE_LIMIT settings configured

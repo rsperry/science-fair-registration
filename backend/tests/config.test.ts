@@ -63,28 +63,6 @@ describe('Config Module', () => {
     jest.dontMock('dotenv');
   });
 
-  it('should accept GOOGLE_SERVICE_ACCOUNT_KEY_PATH instead of base64 key', () => {
-    // Mock dotenv to not load .env file
-    jest.doMock('dotenv', () => ({
-      config: jest.fn(),
-    }));
-
-    process.env = {
-      GOOGLE_SHEETS_ID: 'test-sheet-id',
-      GOOGLE_SERVICE_ACCOUNT_KEY_PATH: '/path/to/service-account.json',
-    };
-
-    jest.isolateModules(() => {
-      const { config } = require('../src/config');
-
-      expect(config.googleSheetsId).toBe('test-sheet-id');
-      expect(config.googleServiceAccountKeyPath).toBe('/path/to/service-account.json');
-      expect(config.googleServiceAccountKey).toBe('');
-    });
-
-    jest.dontMock('dotenv');
-  });
-
   it('should throw error when GOOGLE_SHEETS_ID is missing', () => {
     // Mock dotenv to not load .env file
     jest.doMock('dotenv', () => ({
@@ -131,37 +109,22 @@ describe('Config Module', () => {
       jest.isolateModules(() => {
         require('../src/config');
       });
-    }).toThrow('Either GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 or GOOGLE_SERVICE_ACCOUNT_KEY_PATH must be provided');
+    }).toThrow('GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 environment variable is required');
 
     jest.dontMock('dotenv');
   });
 
-  it('should throw error when both service account key options are empty', () => {
+  it('should throw error when service account key is empty', () => {
     process.env = {
       GOOGLE_SHEETS_ID: 'test-sheet-id',
       GOOGLE_SERVICE_ACCOUNT_KEY_BASE64: '',
-      GOOGLE_SERVICE_ACCOUNT_KEY_PATH: '',
     };
 
     expect(() => {
       jest.isolateModules(() => {
         require('../src/config');
       });
-    }).toThrow('Either GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 or GOOGLE_SERVICE_ACCOUNT_KEY_PATH must be provided');
-  });
-
-  it('should accept when both service account options are provided', () => {
-    process.env = {
-      GOOGLE_SHEETS_ID: 'test-sheet-id',
-      GOOGLE_SERVICE_ACCOUNT_KEY_BASE64: 'test-key-base64',
-      GOOGLE_SERVICE_ACCOUNT_KEY_PATH: '/path/to/key.json',
-    };
-
-    expect(() => {
-      const { config } = require('../src/config');
-      expect(config.googleServiceAccountKey).toBe('test-key-base64');
-      expect(config.googleServiceAccountKeyPath).toBe('/path/to/key.json');
-    }).not.toThrow();
+    }).toThrow('GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 environment variable is required');
   });
 
   it('should parse port as integer', () => {

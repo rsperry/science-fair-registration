@@ -1,6 +1,7 @@
 [![CI/CD Pipeline](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml/badge.svg)](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml)
 
-+ [![cov](https://rsperry.github.io/science-fair-registration/badges/coverage.svg)](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml)
+[![cov](https://rsperry.github.io/science-fair-registration/badges/coverage.svg)](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml)
+
 
 # Science Fair Registration Application
 
@@ -79,7 +80,7 @@ science-fair-registration/
 
 ## Prerequisites
 
-- Node.js >= 24.0.0
+- Node.js >= 20.0.0
 - npm >= 10.0.0
 - Google Cloud Platform account (for Google Sheets API)
 - Docker (optional, for containerized deployment)
@@ -175,13 +176,7 @@ FRONTEND_ORIGIN=http://localhost:5173
 
 # Google Sheets Configuration
 GOOGLE_SHEETS_ID=your_spreadsheet_id_here
-
-# Option 1: Base64-encode your service account JSON
-# Run: cat service-account-key.json | base64
 GOOGLE_SERVICE_ACCOUNT_KEY_BASE64=your_base64_encoded_json_here
-
-# Option 2: Or provide a file path (alternative to base64)
-# GOOGLE_SERVICE_ACCOUNT_KEY_PATH=/path/to/service-account-key.json
 
 # Security & Rate Limiting
 RATE_LIMIT_WINDOW=3600000
@@ -192,7 +187,7 @@ RECAPTCHA_SECRET=
 SENTRY_DSN=
 ```
 
-**To base64-encode your service account key (Option 1):**
+**To base64-encode your service account key:**
 
 ```bash
 # On Linux/Mac:

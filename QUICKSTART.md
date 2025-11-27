@@ -3,9 +3,9 @@
 ## Quick Setup (5 minutes)
 
 ### 1. Install Node.js
-Make sure you have Node.js 24+ installed:
+Make sure you have Node.js 20+ installed:
 ```bash
-node --version  # Should be 24.0.0 or higher
+node --version  # Should be 20.0.0 or higher
 ```
 
 ### 2. Install Dependencies

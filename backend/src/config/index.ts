@@ -10,7 +10,6 @@ interface Config {
   frontendOrigin: string;
   googleSheetsId: string;
   googleServiceAccountKey: string;
-  googleServiceAccountKeyPath?: string;
   recaptchaSecret?: string;
   rateLimitWindow: number;
   rateLimitMax: number;
@@ -24,7 +23,6 @@ function getConfig(): Config {
     frontendOrigin: process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
     googleSheetsId: process.env.GOOGLE_SHEETS_ID || '',
     googleServiceAccountKey: process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 || '',
-    googleServiceAccountKeyPath: process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH,
     recaptchaSecret: process.env.RECAPTCHA_SECRET,
     rateLimitWindow: parseInt(process.env.RATE_LIMIT_WINDOW || '3600000', 10),
     rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX || '10', 10),
@@ -36,10 +34,8 @@ function getConfig(): Config {
     throw new Error('GOOGLE_SHEETS_ID environment variable is required');
   }
 
-  if (!config.googleServiceAccountKey && !config.googleServiceAccountKeyPath) {
-    throw new Error(
-      'Either GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 or GOOGLE_SERVICE_ACCOUNT_KEY_PATH must be provided'
-    );
+  if (!config.googleServiceAccountKey) {
+    throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 environment variable is required');
   }
 
   return config;

@@ -283,7 +283,7 @@ const RegistrationForm = () => {
                 return a.name.localeCompare(b.name);
               })
               .map((teacher) => (
-                <MenuItem key={teacher.name} value={teacher.name}>
+                <MenuItem key={`${teacher.grade}-${teacher.name}`} value={teacher.name}>
                   {teacher.grade} - {teacher.name}
                 </MenuItem>
               ))
@@ -412,7 +412,7 @@ const RegistrationForm = () => {
                     return a.name.localeCompare(b.name);
                   })
                   .map((teacher) => (
-                    <MenuItem key={teacher.name} value={teacher.name}>
+                    <MenuItem key={`${teacher.grade}-${teacher.name}`} value={teacher.name}>
                       {teacher.grade} - {teacher.name}
                     </MenuItem>
                   ))

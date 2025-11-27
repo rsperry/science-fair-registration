@@ -158,6 +158,27 @@ describe('Registration API', () => {
       expect(response.body.errors).toBeDefined();
     });
 
+    it('should reject registration that fails schema validation safeParse', async () => {
+      const invalidData = {
+        studentName: 123, // Should be string
+        teacher: true, // Should be string
+        parentGuardianName: null, // Should be string
+        parentGuardianEmail: 'not-an-email',
+        consentGiven: 'yes', // Should be boolean
+        additionalStudents: 'invalid', // Should be array if provided
+      };
+
+      const response = await request(app)
+        .post('/api/register')
+        .send(invalidData)
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.errors).toBeDefined();
+      expect(Array.isArray(response.body.errors)).toBe(true);
+      expect(response.body.errors.length).toBeGreaterThan(0);
+    });
+
     it('should handle Google Sheets service errors', async () => {
       const { googleSheetsService } = require('../src/services/googleSheets');
       
