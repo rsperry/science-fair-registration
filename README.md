@@ -1,6 +1,4 @@
-[![CI/CD Pipeline](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml/badge.svg)](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml)
-
-[![cov](https://rsperry.github.io/science-fair-registration/badges/coverage.svg)](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml)
+[![CI/CD Pipeline](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml/badge.svg)](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml) [![cov](https://rsperry.github.io/science-fair-registration/badges/coverage.svg)](https://github.com/rsperry/science-fair-registration/actions/workflows/ci.yml)
 
 
 # Science Fair Registration Application

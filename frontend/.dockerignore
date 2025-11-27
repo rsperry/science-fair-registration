@@ -1,0 +1,17 @@
+node_modules
+dist
+npm-debug.log
+.env
+.env.*
+!.env.example
+*.md
+.git
+.gitignore
+coverage
+.vscode
+.idea
+tests
+*.test.tsx
+*.test.ts
+jest.config.js
+setupTests.ts
