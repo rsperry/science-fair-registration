@@ -16,6 +16,11 @@ describe('RegistrationForm Component', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.clearAllTimers();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('should render the form with all required fields', async () => {
