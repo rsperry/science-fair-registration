@@ -276,8 +276,6 @@ const RegistrationForm = () => {
                 const gradeB = b.grade.toUpperCase();
                 const isNumA = !isNaN(Number(gradeA));
                 const isNumB = !isNaN(Number(gradeB));
-
-                console.log('Sorting teachers:', a, b, isNumA, isNumB);
                 
                 if (isNumA && !isNumB) return 1; // Numbers after letters
                 if (!isNumA && isNumB) return -1; // Letters before numbers
@@ -285,7 +283,7 @@ const RegistrationForm = () => {
                 return a.name.localeCompare(b.name);
               })
               .map((teacher) => (
-                <MenuItem key={teacher.name} value={teacher.name}>
+                <MenuItem key={`${teacher.grade}-${teacher.name}`} value={teacher.name}>
                   {teacher.grade} - {teacher.name}
                 </MenuItem>
               ))
@@ -414,7 +412,7 @@ const RegistrationForm = () => {
                     return a.name.localeCompare(b.name);
                   })
                   .map((teacher) => (
-                    <MenuItem key={teacher.name} value={teacher.name}>
+                    <MenuItem key={`${teacher.grade}-${teacher.name}`} value={teacher.name}>
                       {teacher.grade} - {teacher.name}
                     </MenuItem>
                   ))
