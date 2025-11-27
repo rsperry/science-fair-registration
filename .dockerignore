@@ -1,0 +1,49 @@
+# Node modules
+node_modules
+**/node_modules
+
+# Build outputs
+dist
+**/dist
+coverage
+**/coverage
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Logs
+npm-debug.log*
+*.log
+
+# Tests
+tests
+**/tests
+*.test.ts
+*.test.tsx
+jest.config.js
+setupTests.ts
+
+# Documentation
+*.md
+!README.md
+
+# CI/CD
+.github
+
+# Other
+.prettierrc
+postman_collection.json
+setup.ps1
+setup.sh

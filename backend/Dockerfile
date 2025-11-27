@@ -3,25 +3,30 @@ FROM node:24-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files first for better layer caching
 COPY package*.json ./
-RUN npm ci --only=production
+
+# Install ALL dependencies (including devDependencies) for building
+RUN npm ci
 
 # Copy source code
-COPY . .
+COPY tsconfig.json ./
+COPY src ./src
 
 # Build TypeScript
 RUN npm run build
 
-# Production image
+# Production image - use distroless for smaller size
 FROM node:24-alpine
 
 WORKDIR /app
 
-# Copy built files and dependencies
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
+# Copy package files and install ONLY production dependencies
 COPY --from=builder /app/package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy built files
+COPY --from=builder /app/dist ./dist
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
@@ -31,4 +36,5 @@ USER nodejs
 
 EXPOSE 4000
 
-CMD ["npm", "start"]
+# Use node directly instead of npm for faster startup
+CMD ["node", "dist/server.js"]

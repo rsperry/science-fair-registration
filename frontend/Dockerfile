@@ -3,10 +3,15 @@ FROM node:24-alpine AS build
 
 WORKDIR /app
 
+# Copy package files first for better layer caching
 COPY package*.json ./
 RUN npm ci
 
-COPY . .
+# Copy only necessary build files
+COPY tsconfig*.json vite.config.ts index.html ./
+COPY src ./src
+COPY public ./public
+
 RUN npm run build
 
 # Production stage with nginx

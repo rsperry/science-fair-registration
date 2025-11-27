@@ -6,12 +6,17 @@ FROM node:24-alpine AS frontend-builder
 
 WORKDIR /app/frontend
 
+# Copy package files for better layer caching
 COPY frontend/package*.json ./
-COPY frontend/tsconfig*.json ./
-COPY frontend/vite.config.ts ./
 RUN npm ci
 
-COPY frontend/ ./
+# Copy only necessary build files
+COPY frontend/tsconfig*.json ./
+COPY frontend/vite.config.ts ./
+COPY frontend/index.html ./
+COPY frontend/src ./src
+COPY frontend/public ./public
+
 RUN npm run build
 
 # Stage 2: Build Backend
@@ -19,10 +24,14 @@ FROM node:24-alpine AS backend-builder
 
 WORKDIR /app/backend
 
+# Copy package files for better layer caching
 COPY backend/package*.json ./
 RUN npm ci
 
-COPY backend/ ./
+# Copy only source files needed for build
+COPY backend/tsconfig.json ./
+COPY backend/src ./src
+
 RUN npm run build
 
 # Stage 3: Production Image
@@ -33,8 +42,8 @@ WORKDIR /app
 # Copy package files first
 COPY --from=backend-builder /app/backend/package*.json ./
 
-# Install only production dependencies
-RUN npm ci --omit=dev
+# Install only production dependencies and clean cache
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Copy backend built files
 COPY --from=backend-builder /app/backend/dist ./dist
@@ -51,4 +60,5 @@ USER nodejs
 
 EXPOSE 4000
 
-CMD ["npm", "start"]
+# Use node directly instead of npm for faster startup (avoids npm overhead)
+CMD ["node", "dist/server.js"]
