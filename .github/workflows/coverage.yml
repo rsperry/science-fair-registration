@@ -44,3 +44,4 @@ jobs:
           # Specifies the script you already ran, confirming no re-run is needed
           test-script: 'npm test' 
           # The action automatically finds and reads the generated report file
+          coverage-file: coverage/coverage-summary.json
