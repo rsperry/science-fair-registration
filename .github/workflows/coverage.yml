@@ -37,7 +37,7 @@ jobs:
 
       - name: Jest coverage report
         # It's recommended to use the StepSecurity maintained action for better security
-        uses: step-security/jest-coverage-report-action@v2
+        uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           # Skips the action's built-in install and test steps since they were done manually
           skip-step: all 
