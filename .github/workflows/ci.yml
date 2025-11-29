@@ -30,7 +30,7 @@ jobs:
         run: npm run lint
       
       - name: Run tests
-        run: npm Test
+        run: npm test
 
   docker-build:
     name: Docker Build Test
