@@ -59,24 +59,6 @@ router.post('/register', async (req: Request, res: Response) => {
 
     rows.push(primaryRow);
 
-    // Additional student rows (one per additional student)
-    if (data.additionalStudents && data.additionalStudents.length > 0) {
-      for (const additionalStudent of data.additionalStudents) {
-        const additionalRow: SheetRow = {
-          projectId,
-          projectName: data.projectName || '',
-          primaryProjectRecord: false,
-          studentName: additionalStudent.studentName,
-          teacher: additionalStudent.teacher,
-          grade: additionalStudent.grade,
-          parentGuardianName: additionalStudent.parentGuardianName || '',
-          parentGuardianEmail: additionalStudent.parentGuardianEmail || '',
-          timestamp,
-        };
-        rows.push(additionalRow);
-      }
-    }
-
     // Append to Google Sheets
     await googleSheetsService.appendRegistration(rows);
 

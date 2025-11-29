@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 import { config } from '../config';
-import { SheetRow } from '../types/registration';
+import { SheetRow, StudentRow } from '../types/registration';
 
 export class GoogleSheetsService {
   private sheets;
@@ -29,7 +29,7 @@ export class GoogleSheetsService {
       // Get existing data to determine next project ID
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: config.googleSheetsId,
-        range: 'A:A', // Column A contains project IDs
+        range: 'Registrations-Projects!A:A', // Column A contains project IDs
       });
 
       const values = response.data.values || [];
@@ -59,7 +59,10 @@ export class GoogleSheetsService {
 
   async appendRegistration(rows: SheetRow[]): Promise<void> {
     try {
-      const values = rows.map((row) => [
+      // Filter only primary rows for Registrations-Projects
+      const primaryRows = rows.filter(row => row.primaryProjectRecord);
+      
+      const projectValues = primaryRows.map((row) => [
         row.projectId,
         row.projectName || '',
         row.primaryProjectRecord ? 'TRUE' : 'FALSE',
@@ -88,14 +91,94 @@ export class GoogleSheetsService {
 
       await this.sheets.spreadsheets.values.append({
         spreadsheetId: config.googleSheetsId,
-        range: 'A:X', // Columns A through X (added 3 grade columns)
+        range: 'Registrations-Projects!A:X',
         valueInputOption: 'RAW',
         requestBody: {
-          values,
+          values: projectValues,
         },
       });
 
-      console.log(`Successfully appended ${rows.length} row(s) to Google Sheets`);
+      // Build student rows for Registrations-Students sheet
+      const studentRows: StudentRow[] = [];
+      
+      for (const row of rows) {
+        // Only process primary rows to extract all students
+        if (row.primaryProjectRecord) {
+          // Add primary student
+          studentRows.push({
+            projectId: row.projectId,
+            projectName: row.projectName,
+            studentName: row.studentName,
+            teacher: row.teacher,
+            grade: row.grade,
+            parentGuardianName: row.parentGuardianName,
+            parentGuardianEmail: row.parentGuardianEmail,
+          });
+
+          // Add student 2 if exists
+          if (row.student2Name) {
+            studentRows.push({
+              projectId: row.projectId,
+              projectName: row.projectName,
+              studentName: row.student2Name,
+              teacher: row.student2Teacher || '',
+              grade: row.student2Grade,
+              parentGuardianName: row.student2ParentGuardianName || '',
+              parentGuardianEmail: row.student2ParentGuardianEmail || '',
+            });
+          }
+
+          // Add student 3 if exists
+          if (row.student3Name) {
+            studentRows.push({
+              projectId: row.projectId,
+              projectName: row.projectName,
+              studentName: row.student3Name,
+              teacher: row.student3Teacher || '',
+              grade: row.student3Grade,
+              parentGuardianName: row.student3ParentGuardianName || '',
+              parentGuardianEmail: row.student3ParentGuardianEmail || '',
+            });
+          }
+
+          // Add student 4 if exists
+          if (row.student4Name) {
+            studentRows.push({
+              projectId: row.projectId,
+              projectName: row.projectName,
+              studentName: row.student4Name,
+              teacher: row.student4Teacher || '',
+              grade: row.student4Grade,
+              parentGuardianName: row.student4ParentGuardianName || '',
+              parentGuardianEmail: row.student4ParentGuardianEmail || '',
+            });
+          }
+        }
+      }
+
+      // Append all students to Registrations-Students sheet
+      if (studentRows.length > 0) {
+        const studentValues = studentRows.map((student) => [
+          student.projectId,
+          student.projectName || '',
+          student.studentName,
+          student.teacher,
+          student.grade || '',
+          student.parentGuardianName,
+          student.parentGuardianEmail,
+        ]);
+
+        await this.sheets.spreadsheets.values.append({
+          spreadsheetId: config.googleSheetsId,
+          range: 'Registrations-Students!A:G',
+          valueInputOption: 'RAW',
+          requestBody: {
+            values: studentValues,
+          },
+        });
+      }
+
+      console.log(`Successfully appended ${primaryRows.length} row(s) to Registrations-Projects and ${studentRows.length} student(s) to Registrations-Students`);
     } catch (error) {
       console.error('Error appending to Google Sheets:', error);
       throw new Error('Failed to save registration to Google Sheets');

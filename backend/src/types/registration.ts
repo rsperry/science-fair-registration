@@ -50,3 +50,13 @@ export interface SheetRow {
   student4ParentGuardianEmail?: string;
   timestamp: string;
 }
+
+export interface StudentRow {
+  projectId: number;
+  projectName: string;
+  studentName: string;
+  teacher: string;
+  grade?: string;
+  parentGuardianName: string;
+  parentGuardianEmail: string;
+}
