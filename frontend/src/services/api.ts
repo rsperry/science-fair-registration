@@ -3,7 +3,7 @@ import { config } from '../config';
 import { RegistrationFormData, RegistrationResponse, ErrorResponse } from '../types';
 
 const api = axios.create({
-  baseURL: `${config.apiUrl}/api`,
+  baseURL: config.apiUrl ? `${config.apiUrl}/api` : '/api',
   headers: {
     'Content-Type': 'application/json',
   },
