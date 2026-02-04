@@ -6,6 +6,8 @@ import { MetadataProvider } from '../src/contexts/MetadataContext';
 // Mock the API module before importing anything that uses it
 jest.mock('../src/services/api');
 
+/* eslint-disable react-refresh/only-export-components */
+
 interface AllTheProvidersProps {
   children: React.ReactNode;
 }
@@ -27,3 +29,4 @@ const customRender = (
 
 export * from '@testing-library/react';
 export { customRender as render };
+/* eslint-enable react-refresh/only-export-components */

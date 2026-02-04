@@ -7,7 +7,12 @@ export class GoogleSheetsService {
   private projectIdCounter = 100;
 
   constructor() {
-    this.sheets = this.initializeClient();
+    try {
+      this.sheets = this.initializeClient();
+    } catch (error) {
+      console.error('Failed to initialize Google Sheets service:', error);
+      throw error;
+    }
   }
 
   private initializeClient() {

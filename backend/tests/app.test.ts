@@ -1,19 +1,26 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
 import request from 'supertest';
 import app from '../src/app';
+import { sheetsService } from '../src/services';
 
-// Mock the Google Sheets service
-jest.mock('../src/services/googleSheets', () => ({
-  googleSheetsService: {
+// Mock the service factory
+jest.mock('../src/services', () => ({
+  sheetsService: {
     getNextProjectId: jest.fn().mockResolvedValue(100),
     appendRegistration: jest.fn().mockResolvedValue(undefined),
-    getTeachers: jest.fn().mockResolvedValue(['Mrs. Smith', 'Mr. Johnson']),
+    getTeachers: jest.fn().mockResolvedValue([
+      { name: 'Mrs. Smith', grade: '5th' },
+      { name: 'Mr. Johnson', grade: '4th' }
+    ]),
     getFairMetadata: jest.fn().mockResolvedValue({
       school: 'Test School',
       contactEmail: 'test@example.com',
+      registrationDeadline: '2026-12-31',
+      scienceFairDate: '2027-01-15',
     }),
   },
 }));
+
+const mockSheetsService = sheetsService as jest.Mocked<typeof sheetsService>;
 
 describe('App Configuration', () => {
   describe('Security Middleware', () => {
@@ -99,10 +106,8 @@ describe('App Configuration', () => {
 
   describe('Error Handler', () => {
     it('should handle errors and return 500 in development mode', async () => {
-      const { googleSheetsService } = require('../src/services/googleSheets');
-      
       // Make the service throw an error
-      googleSheetsService.getNextProjectId.mockRejectedValueOnce(new Error('Test error'));
+      mockSheetsService.getNextProjectId.mockRejectedValueOnce(new Error('Test error'));
 
       const validData = {
         studentName: 'John Doe',
