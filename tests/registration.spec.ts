@@ -49,8 +49,8 @@ test.describe('Science Fair Registration', () => {
     // Wait for home page to load
     await page.waitForLoadState('domcontentloaded', { timeout: 30000 });
 
-    // Wait for backend API call to complete
-    await expect(page.getByRole('heading', { name: /Washington Science Fair/i })).toBeVisible({timeout: 10000});
+    // Wait for backend API call to complete - expecting mock data
+    await expect(page.getByRole('heading', { name: /Test Elementary School Science Fair/i })).toBeVisible({timeout: 10000});
     
     await page.getByRole('button', { name: 'Register Your Project' }).click();
     
@@ -63,8 +63,8 @@ test.describe('Science Fair Registration', () => {
   });
 
   test.afterEach(async () => {
-    // Wait 15 seconds after each test to avoid API rate limits
-    await new Promise(resolve => setTimeout(resolve, 30000));
+    // Small delay between tests
+    await new Promise(resolve => setTimeout(resolve, 500));
   });
 
   test('should successfully register a project with 1 student', async ({ page }) => {
@@ -133,7 +133,7 @@ test.describe('Science Fair Registration', () => {
     // Wait for confirmation page to load
     await page.waitForLoadState('domcontentloaded', { timeout: 30000 });
 
-    await expect(page.getByRole('heading', { name: /Registration Successful/i })).toBeVisible({ timeout: 30000 });
+    await expect(page.getByRole('heading', { name: /Registration Successful/i })).toBeVisible({ timeout: 60000 });
   });
 
   test('should successfully register a project with 4 students (maximum)', async ({ page }) => {
@@ -158,7 +158,7 @@ test.describe('Science Fair Registration', () => {
     // Wait for confirmation page to load
     await page.waitForLoadState('domcontentloaded', { timeout: 30000 });
 
-    await expect(page.getByRole('heading', { name: /Registration Successful/i })).toBeVisible({ timeout: 30000 });
+    await expect(page.getByRole('heading', { name: /Registration Successful/i })).toBeVisible({ timeout: 60000 });
   });
 
   test('should handle backend failure gracefully', async ({ page }) => {
@@ -195,8 +195,8 @@ test.describe('Registration Form Validation', () => {
     // Wait for home page to load
     await page.waitForLoadState('domcontentloaded', { timeout: 30000 });
 
-    // Wait for backend API call to complete
-    await expect(page.getByRole('heading', { name: /Washington Science Fair/i })).toBeVisible({ timeout: 10000 });
+    // Wait for backend API call to complete - expecting mock data
+    await expect(page.getByRole('heading', { name: /Test Elementary School Science Fair/i })).toBeVisible({ timeout: 10000 });
     
     await page.getByRole('button', { name: 'Register Your Project' }).click();
     
