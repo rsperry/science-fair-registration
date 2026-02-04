@@ -3,7 +3,6 @@
  * Exports either the real Google Sheets service or a mock for testing
  */
 
-import { googleSheetsService } from './googleSheets';
 import { mockSheetsService } from './mockSheetsService';
 import { SheetRow } from '../types/registration';
 
@@ -26,4 +25,8 @@ const USE_MOCK = process.env.USE_MOCK_SHEETS === 'true' ||
                  process.env.CI === 'true';
 
 // Export the appropriate service instance
-export const sheetsService = USE_MOCK ? mockSheetsService : googleSheetsService;
+// Use dynamic import for real service to avoid initialization errors in test environments
+export const sheetsService: SheetsService = USE_MOCK 
+  ? mockSheetsService 
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  : require('./googleSheets').googleSheetsService;
