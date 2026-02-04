@@ -14,9 +14,9 @@ jobs:
       with:
         node-version: lts/*
     - name: Install dependencies
-      run: npm run install:all
+      run: npm run install
     - name: Build backend and frontend
-      run: npm run build:all
+      run: npm run build
     - name: Create .env file for E2E tests with mock Google Sheets
       run: |
         cat > .env << 'EOF'
