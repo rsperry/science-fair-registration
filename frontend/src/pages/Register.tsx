@@ -1,32 +1,15 @@
 import { Container, Box, Typography, Paper, Button } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import RegistrationForm from '../components/RegistrationForm';
-import { getFairMetadata } from '../services/api';
+import { useMetadata } from '../contexts/MetadataContext';
 
 const Register = () => {
   const navigate = useNavigate();
-  const [schoolName, setSchoolName] = useState('');
-  const [registrationDeadline, setRegistrationDeadline] = useState('');
-  const [contactEmail, setContactEmail] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadMetadata = async () => {
-      try {
-        const data = await getFairMetadata();
-        setSchoolName(data.school);
-        setRegistrationDeadline(data.registrationDeadline);
-        setContactEmail(data.contactEmail);
-      } catch (error) {
-        console.error('Failed to load metadata:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadMetadata();
-  }, []);
+  const { metadata, loading } = useMetadata();
+  const schoolName = metadata.school;
+  const registrationDeadline = metadata.registrationDeadline;
+  const contactEmail = metadata.contactEmail;
 
   const isRegistrationClosed = (): boolean => {
     try {

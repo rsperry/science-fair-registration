@@ -1,5 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { render, screen, waitFor } from './testUtils';
 import Privacy from '../src/pages/Privacy';
 import * as api from '../src/services/api';
 import userEvent from '@testing-library/user-event';
@@ -21,9 +20,9 @@ describe('Privacy Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Privacy />
-      </BrowserRouter>
+
     );
 
     expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
@@ -38,9 +37,9 @@ describe('Privacy Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Privacy />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -57,9 +56,9 @@ describe('Privacy Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Privacy />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -68,17 +67,23 @@ describe('Privacy Page', () => {
   });
 
   it('should display contact unavailable message when metadata fails to load', async () => {
+    jest.useFakeTimers();
     mockedApi.getFairMetadata.mockRejectedValue(new Error('Failed to load'));
 
     render(
-      <BrowserRouter>
+
         <Privacy />
-      </BrowserRouter>
+
     );
+
+    // Fast-forward through all retries
+    await jest.runAllTimersAsync();
 
     await waitFor(() => {
       expect(screen.getByText('Contact information unavailable')).toBeInTheDocument();
     });
+
+    jest.useRealTimers();
   });
 
   it('should render all privacy policy sections', () => {
@@ -90,9 +95,9 @@ describe('Privacy Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Privacy />
-      </BrowserRouter>
+
     );
 
     expect(screen.getByText('Information We Collect')).toBeInTheDocument();
@@ -110,9 +115,9 @@ describe('Privacy Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Privacy />
-      </BrowserRouter>
+
     );
 
     const backButton = screen.getByRole('button', { name: /Return to Home/i });
@@ -130,9 +135,9 @@ describe('Privacy Page', () => {
     const user = userEvent.setup({ delay: null });
 
     render(
-      <BrowserRouter>
+
         <Privacy />
-      </BrowserRouter>
+
     );
 
     const returnButton = screen.getByRole('button', { name: /Return to Home/i });

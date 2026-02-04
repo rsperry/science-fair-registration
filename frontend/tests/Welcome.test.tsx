@@ -1,5 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { render, screen, waitFor } from './testUtils';
 import Welcome from '../src/pages/Welcome';
 import * as api from '../src/services/api';
 import userEvent from '@testing-library/user-event';
@@ -20,11 +19,7 @@ describe('Welcome Page', () => {
       scienceFairDate: '2026-02-10',
     });
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
 
     await waitFor(() => {
       expect(screen.getByText(/Lincoln Elementary Science Fair Registration/)).toBeInTheDocument();
@@ -39,11 +34,7 @@ describe('Welcome Page', () => {
       scienceFairDate: '2100-02-10',
     });
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /Register Your Project/i })).toBeInTheDocument();
@@ -51,32 +42,36 @@ describe('Welcome Page', () => {
   });
 
   it('should display error message when metadata fails to load', async () => {
+    jest.useFakeTimers();
     mockedApi.getFairMetadata.mockRejectedValue(new Error('Network error'));
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
+
+    // Fast-forward through all retries
+    await jest.runAllTimersAsync();
 
     await waitFor(() => {
       expect(screen.getByText(/Error Loading Information/)).toBeInTheDocument();
       expect(screen.getByText(/Unable to load science fair information/)).toBeInTheDocument();
     });
+
+    jest.useRealTimers();
   });
 
   it('should display retry button when there is an error', async () => {
+    jest.useFakeTimers();
     mockedApi.getFairMetadata.mockRejectedValue(new Error('Network error'));
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
+
+    // Fast-forward through all retries
+    await jest.runAllTimersAsync();
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /Retry/i })).toBeInTheDocument();
     });
+
+    jest.useRealTimers();
   });
 
   it('should show registration closed message when deadline has passed', async () => {
@@ -87,11 +82,7 @@ describe('Welcome Page', () => {
       scienceFairDate: '2021-02-10',
     });
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
 
     await waitFor(() => {
       expect(screen.getByText(/Registration closed on/)).toBeInTheDocument();
@@ -106,11 +97,7 @@ describe('Welcome Page', () => {
       scienceFairDate: '2100-02-10',
     });
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /Register Your Project/i })).toBeInTheDocument();
@@ -128,16 +115,15 @@ describe('Welcome Page', () => {
       scienceFairDate: '2026-03-15',
     });
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
 
     await waitFor(() => {
       // Dates are formatted - check they appear in the document
-      expect(screen.getByText(/December/)).toBeInTheDocument();
-      expect(screen.getByText(/March/)).toBeInTheDocument();
+      // Use getAllByText since dates may appear multiple times
+      const decemberElements = screen.getAllByText(/December/);
+      expect(decemberElements.length).toBeGreaterThan(0);
+      const marchElements = screen.getAllByText(/March/);
+      expect(marchElements.length).toBeGreaterThan(0);
     });
   });
 
@@ -149,11 +135,7 @@ describe('Welcome Page', () => {
       scienceFairDate: '2026-03-15',
     });
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
 
     await waitFor(() => {
       // Should display the original string when date is invalid
@@ -169,11 +151,7 @@ describe('Welcome Page', () => {
       scienceFairDate: '2026-03-15',
     });
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
 
     await waitFor(() => {
       // Should show register button when deadline is invalid (defaults to allowing registration)
@@ -184,11 +162,7 @@ describe('Welcome Page', () => {
   it('should show loading spinners while metadata is loading', () => {
     mockedApi.getFairMetadata.mockImplementation(() => new Promise(() => {}));
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
 
     // Should show loading spinners for dates
     const spinners = screen.getAllByRole('progressbar');
@@ -196,18 +170,20 @@ describe('Welcome Page', () => {
   });
 
   it('should display retry button in error state', async () => {
+    jest.useFakeTimers();
     mockedApi.getFairMetadata.mockRejectedValue(new Error('Network error'));
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
+
+    // Fast-forward through all retries
+    await jest.runAllTimersAsync();
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /Retry/i })).toBeInTheDocument();
       expect(screen.getByText(/Error Loading Information/)).toBeInTheDocument();
     });
+
+    jest.useRealTimers();
   });
 
   it('should display all important information and rules', async () => {
@@ -218,11 +194,7 @@ describe('Welcome Page', () => {
       scienceFairDate: '2100-02-10',
     });
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
 
     await waitFor(() => {
       expect(screen.getByText(/Important Dates/)).toBeInTheDocument();
@@ -241,11 +213,7 @@ describe('Welcome Page', () => {
       scienceFairDate: '2100-02-10',
     });
 
-    const { container } = render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    const { container } = render(<Welcome />);
 
     await waitFor(() => {
       const scienceIcon = container.querySelector('svg[data-testid="ScienceIcon"]');
@@ -261,11 +229,7 @@ describe('Welcome Page', () => {
       scienceFairDate: '2100-02-10',
     });
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
 
     await waitFor(() => {
       expect(screen.getByText(/Washington Elementary Science Fair Registration/)).toBeInTheDocument();
@@ -282,11 +246,7 @@ describe('Welcome Page', () => {
 
     const user = userEvent.setup({ delay: null });
 
-    render(
-      <BrowserRouter>
-        <Welcome />
-      </BrowserRouter>
-    );
+    render(<Welcome />);
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /Register Your Project/i })).toBeInTheDocument();
@@ -300,3 +260,4 @@ describe('Welcome Page', () => {
     expect(registerButton).toBeInTheDocument();
   });
 });
+

@@ -1,5 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { render, screen, waitFor } from './testUtils';
 import userEvent from '@testing-library/user-event';
 import Register from '../src/pages/Register';
 import * as api from '../src/services/api';
@@ -27,15 +26,15 @@ describe('Register Page', () => {
   it('should load and display school metadata', async () => {
     mockGetFairMetadata.mockResolvedValue({
       school: 'Lincoln Elementary School',
-      registrationDeadline: '2025-12-31',
+      registrationDeadline: '2026-12-31', // Future date so registration is open
       contactEmail: 'science@lincoln.edu',
-      scienceFairDate: '2026-02-15',
+      scienceFairDate: '2027-02-15',
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -51,9 +50,9 @@ describe('Register Page', () => {
     const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -73,9 +72,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -92,9 +91,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -116,9 +115,9 @@ describe('Register Page', () => {
     const user = userEvent.setup();
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -140,9 +139,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -160,9 +159,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -183,9 +182,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -203,9 +202,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -220,9 +219,9 @@ describe('Register Page', () => {
     mockGetFairMetadata.mockImplementation(() => new Promise(() => {})); // Never resolves
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     // When loading, school name should not be visible
@@ -239,9 +238,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -261,9 +260,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -281,9 +280,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -304,9 +303,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -326,9 +325,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -350,9 +349,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -371,9 +370,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -393,9 +392,9 @@ describe('Register Page', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Register />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {

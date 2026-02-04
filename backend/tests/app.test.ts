@@ -42,7 +42,7 @@ describe('App Configuration', () => {
     it('should set CORS headers', async () => {
       const response = await request(app)
         .get('/health')
-        .set('Origin', 'http://localhost:5173');
+        .set('Origin', 'http://localhost:4173');
 
       expect(response.headers).toHaveProperty('access-control-allow-origin');
     });

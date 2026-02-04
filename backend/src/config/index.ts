@@ -20,7 +20,7 @@ function getConfig(): Config {
   const config: Config = {
     nodeEnv: process.env.NODE_ENV || 'development',
     port: parseInt(process.env.PORT || '4000', 10),
-    frontendOrigin: process.env.FRONTEND_ORIGIN || 'http://localhost:5173',
+    frontendOrigin: process.env.FRONTEND_ORIGIN || 'http://localhost:4173',
     googleSheetsId: process.env.GOOGLE_SHEETS_ID || '',
     googleServiceAccountKey: process.env.GOOGLE_SERVICE_ACCOUNT_KEY_BASE64 || '',
     recaptchaSecret: process.env.RECAPTCHA_SECRET,

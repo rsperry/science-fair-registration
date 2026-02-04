@@ -28,7 +28,7 @@ describe('App Production Mode', () => {
       config: {
         nodeEnv: 'production',
         port: 4000,
-        frontendOrigin: 'http://localhost:5173',
+        frontendOrigin: 'http://localhost:4173',
         googleSheetsId: 'test-sheet-id',
         googleServiceAccountKey: 'test-key',
         rateLimitWindow: 3600000,
@@ -76,7 +76,7 @@ describe('App Production Mode', () => {
       config: {
         nodeEnv: 'production',
         port: 4000,
-        frontendOrigin: 'http://localhost:5173',
+        frontendOrigin: 'http://localhost:4173',
         googleSheetsId: 'test-sheet-id',
         googleServiceAccountKey: 'test-key',
         rateLimitWindow: 3600000,
@@ -113,7 +113,7 @@ describe('App Production Mode', () => {
       config: {
         nodeEnv: 'production',
         port: 4000,
-        frontendOrigin: 'http://localhost:5173',
+        frontendOrigin: 'http://localhost:4173',
         googleSheetsId: 'test-sheet-id',
         googleServiceAccountKey: 'test-key',
         rateLimitWindow: 3600000,
@@ -150,7 +150,7 @@ describe('App Production Mode', () => {
       config: {
         nodeEnv: 'production',
         port: 4000,
-        frontendOrigin: 'http://localhost:5173',
+        frontendOrigin: 'http://localhost:4173',
         googleSheetsId: 'test-sheet-id',
         googleServiceAccountKey: 'test-key',
         rateLimitWindow: 3600000,
@@ -194,7 +194,7 @@ describe('App Production Mode', () => {
       config: {
         nodeEnv: 'production',
         port: 4000,
-        frontendOrigin: 'http://localhost:5173',
+        frontendOrigin: 'http://localhost:4173',
         googleSheetsId: 'test-sheet-id',
         googleServiceAccountKey: 'test-key',
         rateLimitWindow: 3600000,
@@ -235,7 +235,7 @@ describe('App Production Mode', () => {
       config: {
         nodeEnv: 'production',
         port: 4000,
-        frontendOrigin: 'http://localhost:5173',
+        frontendOrigin: 'http://localhost:4173',
         googleSheetsId: 'test-sheet-id',
         googleServiceAccountKey: 'test-key',
         rateLimitWindow: 3600000,
