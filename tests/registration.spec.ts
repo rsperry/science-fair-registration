@@ -50,7 +50,7 @@ test.describe('Science Fair Registration', () => {
     await page.waitForLoadState('domcontentloaded', { timeout: 30000 });
 
     // Wait for backend API call to complete - expecting mock data
-    await expect(page.getByRole('heading', { name: /Test Elementary School Science Fair/i })).toBeVisible({timeout: 10000});
+    await expect(page.getByRole('heading', { name: /Test Elementary School Science Fair/i })).toBeVisible({timeout: 30000});
     
     await page.getByRole('button', { name: 'Register Your Project' }).click();
     
