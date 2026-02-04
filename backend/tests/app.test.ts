@@ -2,27 +2,32 @@ import request from 'supertest';
 import app from '../src/app';
 import { sheetsService } from '../src/services';
 
-// Mock the service factory
-jest.mock('../src/services', () => ({
-  sheetsService: {
-    getNextProjectId: jest.fn().mockResolvedValue(100),
-    appendRegistration: jest.fn().mockResolvedValue(undefined),
-    getTeachers: jest.fn().mockResolvedValue([
+describe('App Configuration', () => {
+  // Setup spies before each test
+  beforeEach(() => {
+    // Reset any existing mock data if using mock service
+    if ('reset' in sheetsService && typeof sheetsService.reset === 'function') {
+      sheetsService.reset();
+    }
+    
+    // Setup default implementations using jest.spyOn
+    jest.spyOn(sheetsService, 'getNextProjectId').mockResolvedValue(100);
+    jest.spyOn(sheetsService, 'appendRegistration').mockResolvedValue(undefined);
+    jest.spyOn(sheetsService, 'getTeachers').mockResolvedValue([
       { name: 'Mrs. Smith', grade: '5th' },
       { name: 'Mr. Johnson', grade: '4th' }
-    ]),
-    getFairMetadata: jest.fn().mockResolvedValue({
+    ]);
+    jest.spyOn(sheetsService, 'getFairMetadata').mockResolvedValue({
       school: 'Test School',
       contactEmail: 'test@example.com',
       registrationDeadline: '2026-12-31',
       scienceFairDate: '2027-01-15',
-    }),
-  },
-}));
+    });
+  });
 
-const mockSheetsService = sheetsService as jest.Mocked<typeof sheetsService>;
-
-describe('App Configuration', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
   describe('Security Middleware', () => {
     it('should set security headers', async () => {
       const response = await request(app).get('/health');
@@ -107,7 +112,7 @@ describe('App Configuration', () => {
   describe('Error Handler', () => {
     it('should handle errors and return 500 in development mode', async () => {
       // Make the service throw an error
-      mockSheetsService.getNextProjectId.mockRejectedValueOnce(new Error('Test error'));
+      jest.spyOn(sheetsService, 'getNextProjectId').mockRejectedValueOnce(new Error('Test error'));
 
       const validData = {
         studentName: 'John Doe',
