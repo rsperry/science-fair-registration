@@ -78,5 +78,11 @@ export default defineConfig({
     url: 'http://localhost:4173',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
+    env: {
+      USE_MOCK_SHEETS: 'true',
+      NODE_ENV: 'production',
+      PORT: '4000',
+      FRONTEND_ORIGIN: 'http://localhost:4173',
+    },
   },
 });
