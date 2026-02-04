@@ -46,11 +46,10 @@ export default defineConfig({
       use: { ...devices['Desktop Firefox'] },
     },
 
-    // Webkit disabled due to flaky tests with 3+ students
-    // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    // },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
 
     /* Test against mobile viewports. */
     // {
