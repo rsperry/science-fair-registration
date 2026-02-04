@@ -4,6 +4,7 @@ on:
       - main
 
 env:
+  USE_MOCK_SHEETS: 'true'
   GOOGLE_SHEETS_ID: 'sample'
   GOOGLE_SERVICE_ACCOUNT_KEY_BASE64: 'dGVzdA=='
 
