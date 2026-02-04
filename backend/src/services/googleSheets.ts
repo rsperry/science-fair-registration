@@ -7,7 +7,12 @@ export class GoogleSheetsService {
   private projectIdCounter = 100;
 
   constructor() {
-    this.sheets = this.initializeClient();
+    try {
+      this.sheets = this.initializeClient();
+    } catch (error) {
+      console.error('Failed to initialize Google Sheets service:', error);
+      throw error;
+    }
   }
 
   private initializeClient() {
@@ -26,6 +31,7 @@ export class GoogleSheetsService {
 
   async getNextProjectId(): Promise<number> {
     try {
+      console.log('Getting next project ID from Google Sheets');
       // Get existing data to determine next project ID
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: config.googleSheetsId,
@@ -89,6 +95,7 @@ export class GoogleSheetsService {
         row.timestamp,
       ]);
 
+      console.log('Adding row to Registrations-Projects');
       await this.sheets.spreadsheets.values.append({
         spreadsheetId: config.googleSheetsId,
         range: 'Registrations-Projects!A:X',
@@ -168,6 +175,7 @@ export class GoogleSheetsService {
           student.parentGuardianEmail,
         ]);
 
+        console.log('Adding rows to Registrations-Students');
         await this.sheets.spreadsheets.values.append({
           spreadsheetId: config.googleSheetsId,
           range: 'Registrations-Students!A:G',
@@ -187,6 +195,7 @@ export class GoogleSheetsService {
 
   async getTeachers(): Promise<Array<{ name: string; grade: string }>> {
     try {
+      console.log('Fetching teachers from Google Sheets');
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: config.googleSheetsId,
         range: 'Teachers!A:B', // Get both name and grade columns
@@ -214,6 +223,7 @@ export class GoogleSheetsService {
     scienceFairDate: string;
   }> {
     try {
+      console.log('Fetching fair metadata from Google Sheets');
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: config.googleSheetsId,
         range: 'Info!A:B', // Read columns A and B from Info sheet

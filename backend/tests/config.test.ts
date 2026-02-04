@@ -55,7 +55,7 @@ describe('Config Module', () => {
 
       expect(config.nodeEnv).toBe('development');
       expect(config.port).toBe(4000);
-      expect(config.frontendOrigin).toBe('http://localhost:5173');
+      expect(config.frontendOrigin).toBe('http://localhost:4173');
       expect(config.rateLimitWindow).toBe(3600000);
       expect(config.rateLimitMax).toBe(10);
     });

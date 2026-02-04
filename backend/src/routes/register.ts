@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { registrationSchema } from '../validation/registerSchema';
-import { googleSheetsService } from '../services/googleSheets';
+import { sheetsService } from '../services';
 import { RegistrationRequest, SheetRow } from '../types/registration';
 
 const router = Router();
@@ -24,7 +24,7 @@ router.post('/register', async (req: Request, res: Response) => {
     
     // Generate registration metadata
     const timestamp = new Date().toISOString();
-    const projectId = await googleSheetsService.getNextProjectId();
+    const projectId = await sheetsService.getNextProjectId();
 
     // Create rows to append to the sheet
     const rows: SheetRow[] = [];
@@ -60,7 +60,7 @@ router.post('/register', async (req: Request, res: Response) => {
     rows.push(primaryRow);
 
     // Append to Google Sheets
-    await googleSheetsService.appendRegistration(rows);
+    await sheetsService.appendRegistration(rows);
 
     // Log successful registration
     console.log(JSON.stringify({
@@ -94,7 +94,7 @@ router.post('/register', async (req: Request, res: Response) => {
 
 router.get('/teachers', async (_req: Request, res: Response) => {
   try {
-    const teachers = await googleSheetsService.getTeachers();
+    const teachers = await sheetsService.getTeachers();
     return res.json({
       success: true,
       teachers,
@@ -110,7 +110,7 @@ router.get('/teachers', async (_req: Request, res: Response) => {
 
 router.get('/metadata', async (_req: Request, res: Response) => {
   try {
-    const metadata = await googleSheetsService.getFairMetadata();
+    const metadata = await sheetsService.getFairMetadata();
     return res.json({
       success: true,
       ...metadata,

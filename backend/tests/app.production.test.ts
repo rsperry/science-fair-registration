@@ -28,7 +28,7 @@ describe('App Production Mode', () => {
       config: {
         nodeEnv: 'production',
         port: 4000,
-        frontendOrigin: 'http://localhost:5173',
+        frontendOrigin: 'http://localhost:4173',
         googleSheetsId: 'test-sheet-id',
         googleServiceAccountKey: 'test-key',
         rateLimitWindow: 3600000,
@@ -36,15 +36,17 @@ describe('App Production Mode', () => {
       },
     }));
 
-    // Mock Google Sheets service to throw an error
-    jest.doMock('../src/services/googleSheets', () => ({
-      googleSheetsService: {
+    // Mock the service factory instead of googleSheets directly
+    jest.doMock('../src/services', () => ({
+      sheetsService: {
         getNextProjectId: jest.fn().mockRejectedValue(new Error('Database connection failed')),
         appendRegistration: jest.fn().mockResolvedValue(undefined),
-        getTeachers: jest.fn().mockResolvedValue(['Mrs. Smith']),
+        getTeachers: jest.fn().mockResolvedValue([{ name: 'Mrs. Smith', grade: '5th' }]),
         getFairMetadata: jest.fn().mockResolvedValue({
           school: 'Test School',
           contactEmail: 'test@example.com',
+          registrationDeadline: '2026-12-31',
+          scienceFairDate: '2027-01-15',
         }),
       },
     }));
@@ -76,7 +78,7 @@ describe('App Production Mode', () => {
       config: {
         nodeEnv: 'production',
         port: 4000,
-        frontendOrigin: 'http://localhost:5173',
+        frontendOrigin: 'http://localhost:4173',
         googleSheetsId: 'test-sheet-id',
         googleServiceAccountKey: 'test-key',
         rateLimitWindow: 3600000,
@@ -84,14 +86,17 @@ describe('App Production Mode', () => {
       },
     }));
 
-    jest.doMock('../src/services/googleSheets', () => ({
-      googleSheetsService: {
+    // Mock the service factory instead of googleSheets directly
+    jest.doMock('../src/services', () => ({
+      sheetsService: {
         getNextProjectId: jest.fn().mockResolvedValue(100),
         appendRegistration: jest.fn().mockResolvedValue(undefined),
-        getTeachers: jest.fn().mockResolvedValue(['Mrs. Smith']),
+        getTeachers: jest.fn().mockResolvedValue([{ name: 'Mrs. Smith', grade: '5th' }]),
         getFairMetadata: jest.fn().mockResolvedValue({
           school: 'Test School',
           contactEmail: 'test@example.com',
+          registrationDeadline: '2026-12-31',
+          scienceFairDate: '2027-01-15',
         }),
       },
     }));
@@ -105,7 +110,7 @@ describe('App Production Mode', () => {
       .expect(200);
 
     expect(apiResponse.body.success).toBe(true);
-    expect(apiResponse.body.teachers).toContain('Mrs. Smith');
+    expect(apiResponse.body.teachers).toContainEqual({ name: 'Mrs. Smith', grade: '5th' });
   });
 
   it('should handle static file routing in production - health endpoint', async () => {
@@ -113,7 +118,7 @@ describe('App Production Mode', () => {
       config: {
         nodeEnv: 'production',
         port: 4000,
-        frontendOrigin: 'http://localhost:5173',
+        frontendOrigin: 'http://localhost:4173',
         googleSheetsId: 'test-sheet-id',
         googleServiceAccountKey: 'test-key',
         rateLimitWindow: 3600000,
@@ -121,14 +126,16 @@ describe('App Production Mode', () => {
       },
     }));
 
-    jest.doMock('../src/services/googleSheets', () => ({
-      googleSheetsService: {
+    jest.doMock('../src/services', () => ({
+      sheetsService: {
         getNextProjectId: jest.fn().mockResolvedValue(100),
         appendRegistration: jest.fn().mockResolvedValue(undefined),
-        getTeachers: jest.fn().mockResolvedValue(['Mrs. Smith']),
+        getTeachers: jest.fn().mockResolvedValue([{ name: 'Mrs. Smith', grade: '5th' }]),
         getFairMetadata: jest.fn().mockResolvedValue({
           school: 'Test School',
           contactEmail: 'test@example.com',
+          registrationDeadline: '2026-12-31',
+          scienceFairDate: '2027-01-15',
         }),
       },
     }));
@@ -150,7 +157,7 @@ describe('App Production Mode', () => {
       config: {
         nodeEnv: 'production',
         port: 4000,
-        frontendOrigin: 'http://localhost:5173',
+        frontendOrigin: 'http://localhost:4173',
         googleSheetsId: 'test-sheet-id',
         googleServiceAccountKey: 'test-key',
         rateLimitWindow: 3600000,
@@ -158,14 +165,16 @@ describe('App Production Mode', () => {
       },
     }));
 
-    jest.doMock('../src/services/googleSheets', () => ({
-      googleSheetsService: {
+    jest.doMock('../src/services', () => ({
+      sheetsService: {
         getNextProjectId: jest.fn().mockResolvedValue(100),
         appendRegistration: jest.fn().mockResolvedValue(undefined),
-        getTeachers: jest.fn().mockResolvedValue(['Mrs. Smith']),
+        getTeachers: jest.fn().mockResolvedValue([{ name: 'Mrs. Smith', grade: '5th' }]),
         getFairMetadata: jest.fn().mockResolvedValue({
           school: 'Test School',
           contactEmail: 'test@example.com',
+          registrationDeadline: '2026-12-31',
+          scienceFairDate: '2027-01-15',
         }),
       },
     }));
@@ -194,7 +203,7 @@ describe('App Production Mode', () => {
       config: {
         nodeEnv: 'production',
         port: 4000,
-        frontendOrigin: 'http://localhost:5173',
+        frontendOrigin: 'http://localhost:4173',
         googleSheetsId: 'test-sheet-id',
         googleServiceAccountKey: 'test-key',
         rateLimitWindow: 3600000,
@@ -202,14 +211,16 @@ describe('App Production Mode', () => {
       },
     }));
 
-    jest.doMock('../src/services/googleSheets', () => ({
-      googleSheetsService: {
+    jest.doMock('../src/services', () => ({
+      sheetsService: {
         getNextProjectId: jest.fn().mockResolvedValue(100),
         appendRegistration: jest.fn().mockResolvedValue(undefined),
-        getTeachers: jest.fn().mockResolvedValue(['Mrs. Smith']),
+        getTeachers: jest.fn().mockResolvedValue([{ name: 'Mrs. Smith', grade: '5th' }]),
         getFairMetadata: jest.fn().mockResolvedValue({
           school: 'Test School',
           contactEmail: 'test@example.com',
+          registrationDeadline: '2026-12-31',
+          scienceFairDate: '2027-01-15',
         }),
       },
     }));
@@ -235,7 +246,7 @@ describe('App Production Mode', () => {
       config: {
         nodeEnv: 'production',
         port: 4000,
-        frontendOrigin: 'http://localhost:5173',
+        frontendOrigin: 'http://localhost:4173',
         googleSheetsId: 'test-sheet-id',
         googleServiceAccountKey: 'test-key',
         rateLimitWindow: 3600000,
@@ -243,14 +254,16 @@ describe('App Production Mode', () => {
       },
     }));
 
-    jest.doMock('../src/services/googleSheets', () => ({
-      googleSheetsService: {
+    jest.doMock('../src/services', () => ({
+      sheetsService: {
         getNextProjectId: jest.fn().mockResolvedValue(100),
         appendRegistration: jest.fn().mockResolvedValue(undefined),
-        getTeachers: jest.fn().mockResolvedValue(['Mrs. Smith']),
+        getTeachers: jest.fn().mockResolvedValue([{ name: 'Mrs. Smith', grade: '5th' }]),
         getFairMetadata: jest.fn().mockResolvedValue({
           school: 'Test School',
           contactEmail: 'test@example.com',
+          registrationDeadline: '2026-12-31',
+          scienceFairDate: '2027-01-15',
         }),
       },
     }));

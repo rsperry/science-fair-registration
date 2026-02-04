@@ -1,28 +1,10 @@
 import { Box, Container, Typography, Link, CircularProgress } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { getFairMetadata } from '../services/api';
+import { useMetadata } from '../contexts/MetadataContext';
 
 const Footer = () => {
-  const [contactEmail, setContactEmail] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    const loadMetadata = async () => {
-      try {
-        const data = await getFairMetadata();
-        setContactEmail(data.contactEmail);
-        setError(false);
-      } catch (error) {
-        console.error('Failed to load metadata:', error);
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadMetadata();
-  }, []);
+  const { metadata, loading, error } = useMetadata();
+  const contactEmail = metadata.contactEmail;
 
   return (
     <Box

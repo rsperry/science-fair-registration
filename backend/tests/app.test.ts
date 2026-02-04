@@ -1,21 +1,33 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
 import request from 'supertest';
 import app from '../src/app';
-
-// Mock the Google Sheets service
-jest.mock('../src/services/googleSheets', () => ({
-  googleSheetsService: {
-    getNextProjectId: jest.fn().mockResolvedValue(100),
-    appendRegistration: jest.fn().mockResolvedValue(undefined),
-    getTeachers: jest.fn().mockResolvedValue(['Mrs. Smith', 'Mr. Johnson']),
-    getFairMetadata: jest.fn().mockResolvedValue({
-      school: 'Test School',
-      contactEmail: 'test@example.com',
-    }),
-  },
-}));
+import { sheetsService } from '../src/services';
 
 describe('App Configuration', () => {
+  // Setup spies before each test
+  beforeEach(() => {
+    // Reset any existing mock data if using mock service
+    if ('reset' in sheetsService && typeof sheetsService.reset === 'function') {
+      sheetsService.reset();
+    }
+    
+    // Setup default implementations using jest.spyOn
+    jest.spyOn(sheetsService, 'getNextProjectId').mockResolvedValue(100);
+    jest.spyOn(sheetsService, 'appendRegistration').mockResolvedValue(undefined);
+    jest.spyOn(sheetsService, 'getTeachers').mockResolvedValue([
+      { name: 'Mrs. Smith', grade: '5th' },
+      { name: 'Mr. Johnson', grade: '4th' }
+    ]);
+    jest.spyOn(sheetsService, 'getFairMetadata').mockResolvedValue({
+      school: 'Test School',
+      contactEmail: 'test@example.com',
+      registrationDeadline: '2026-12-31',
+      scienceFairDate: '2027-01-15',
+    });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
   describe('Security Middleware', () => {
     it('should set security headers', async () => {
       const response = await request(app).get('/health');
@@ -42,7 +54,7 @@ describe('App Configuration', () => {
     it('should set CORS headers', async () => {
       const response = await request(app)
         .get('/health')
-        .set('Origin', 'http://localhost:5173');
+        .set('Origin', 'http://localhost:4173');
 
       expect(response.headers).toHaveProperty('access-control-allow-origin');
     });
@@ -99,10 +111,8 @@ describe('App Configuration', () => {
 
   describe('Error Handler', () => {
     it('should handle errors and return 500 in development mode', async () => {
-      const { googleSheetsService } = require('../src/services/googleSheets');
-      
       // Make the service throw an error
-      googleSheetsService.getNextProjectId.mockRejectedValueOnce(new Error('Test error'));
+      jest.spyOn(sheetsService, 'getNextProjectId').mockRejectedValueOnce(new Error('Test error'));
 
       const validData = {
         studentName: 'John Doe',

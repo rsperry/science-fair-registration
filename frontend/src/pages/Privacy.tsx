@@ -1,36 +1,11 @@
 import { Container, Box, Typography, Paper, Button, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
-import { useEffect, useState } from 'react';
-import { getFairMetadata } from '../services/api';
+import { useMetadata } from '../contexts/MetadataContext';
 
 const Privacy = () => {
   const navigate = useNavigate();
-  const [metadata, setMetadata] = useState({
-    school: '',
-    contactEmail: '',
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    const loadMetadata = async () => {
-      try {
-        const data = await getFairMetadata();
-        setMetadata({
-          school: data.school,
-          contactEmail: data.contactEmail,
-        });
-        setError(false);
-      } catch (error) {
-        console.error('Failed to load metadata:', error);
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadMetadata();
-  }, []);
+  const { metadata, loading, error } = useMetadata();
 
   return (
     <Container maxWidth="md">

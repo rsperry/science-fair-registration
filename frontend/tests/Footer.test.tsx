@@ -1,5 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { render, screen, waitFor } from './testUtils';
 import Footer from '../src/components/Footer';
 import * as api from '../src/services/api';
 
@@ -16,9 +15,9 @@ describe('Footer Component', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Footer />
-      </BrowserRouter>
+
     );
 
     expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
@@ -33,9 +32,9 @@ describe('Footer Component', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Footer />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {
@@ -44,17 +43,23 @@ describe('Footer Component', () => {
   });
 
   it('should display error message when metadata fails to load', async () => {
+    jest.useFakeTimers();
     mockedApi.getFairMetadata.mockRejectedValue(new Error('Failed to load'));
 
     render(
-      <BrowserRouter>
+
         <Footer />
-      </BrowserRouter>
+
     );
+
+    // Fast-forward through all retries
+    await jest.runAllTimersAsync();
 
     await waitFor(() => {
       expect(screen.getByText(/Unable to load contact information/)).toBeInTheDocument();
     });
+
+    jest.useRealTimers();
   });
 
   it('should show loading spinner while fetching metadata', () => {
@@ -62,9 +67,9 @@ describe('Footer Component', () => {
     mockedApi.getFairMetadata.mockImplementation(() => new Promise(() => {}));
 
     render(
-      <BrowserRouter>
+
         <Footer />
-      </BrowserRouter>
+
     );
 
     // Loading spinner should be visible
@@ -80,9 +85,9 @@ describe('Footer Component', () => {
     });
 
     render(
-      <BrowserRouter>
+
         <Footer />
-      </BrowserRouter>
+
     );
 
     await waitFor(() => {

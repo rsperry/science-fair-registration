@@ -1,21 +1,33 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
 import request from 'supertest';
 import app from '../src/app';
-
-// Mock the Google Sheets service
-jest.mock('../src/services/googleSheets', () => ({
-  googleSheetsService: {
-    getNextProjectId: jest.fn().mockResolvedValue(100),
-    appendRegistration: jest.fn().mockResolvedValue(undefined),
-    getTeachers: jest.fn().mockResolvedValue(['Mrs. Smith', 'Mr. Johnson']),
-    getFairMetadata: jest.fn().mockResolvedValue({
-      school: 'Test School',
-      contactEmail: 'test@example.com',
-    }),
-  },
-}));
+import { sheetsService } from '../src/services';
 
 describe('Registration API', () => {
+  // Setup spies before each test
+  beforeEach(() => {
+    // Reset any existing mock data if using mock service
+    if ('reset' in sheetsService && typeof sheetsService.reset === 'function') {
+      sheetsService.reset();
+    }
+    
+    // Setup default implementations using jest.spyOn
+    jest.spyOn(sheetsService, 'getNextProjectId').mockResolvedValue(100);
+    jest.spyOn(sheetsService, 'appendRegistration').mockResolvedValue(undefined);
+    jest.spyOn(sheetsService, 'getTeachers').mockResolvedValue([
+      { name: 'Mrs. Smith', grade: '5th' },
+      { name: 'Mr. Johnson', grade: '4th' }
+    ]);
+    jest.spyOn(sheetsService, 'getFairMetadata').mockResolvedValue({
+      school: 'Test School',
+      contactEmail: 'test@example.com',
+      registrationDeadline: '2026-12-31',
+      scienceFairDate: '2027-01-15',
+    });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
   describe('POST /api/register', () => {
     it('should register a valid project', async () => {
       const validData = {
@@ -180,10 +192,8 @@ describe('Registration API', () => {
     });
 
     it('should handle Google Sheets service errors', async () => {
-      const { googleSheetsService } = require('../src/services/googleSheets');
-      
       // Make appendRegistration throw an error
-      googleSheetsService.appendRegistration.mockRejectedValueOnce(
+      jest.spyOn(sheetsService, 'appendRegistration').mockRejectedValueOnce(
         new Error('Google Sheets API error')
       );
 
@@ -202,16 +212,11 @@ describe('Registration API', () => {
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('error');
-
-      // Reset mock
-      googleSheetsService.appendRegistration.mockResolvedValue(undefined);
     });
 
     it('should handle non-Error exceptions', async () => {
-      const { googleSheetsService } = require('../src/services/googleSheets');
-      
       // Make appendRegistration throw a non-Error object
-      googleSheetsService.appendRegistration.mockRejectedValueOnce(
+      jest.spyOn(sheetsService, 'appendRegistration').mockRejectedValueOnce(
         'String error message'
       );
 
@@ -230,9 +235,6 @@ describe('Registration API', () => {
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('error');
-
-      // Reset mock
-      googleSheetsService.appendRegistration.mockResolvedValue(undefined);
     });
 
     it('should handle validation errors with field paths', async () => {
@@ -263,15 +265,13 @@ describe('Registration API', () => {
 
       expect(response.body.success).toBe(true);
       expect(Array.isArray(response.body.teachers)).toBe(true);
-      expect(response.body.teachers).toContain('Mrs. Smith');
-      expect(response.body.teachers).toContain('Mr. Johnson');
+      expect(response.body.teachers).toContainEqual({ name: 'Mrs. Smith', grade: '5th' });
+      expect(response.body.teachers).toContainEqual({ name: 'Mr. Johnson', grade: '4th' });
     });
 
     it('should handle errors when fetching teachers', async () => {
-      const { googleSheetsService } = require('../src/services/googleSheets');
-      
       // Make getTeachers throw an error
-      googleSheetsService.getTeachers.mockRejectedValueOnce(
+      jest.spyOn(sheetsService, 'getTeachers').mockRejectedValueOnce(
         new Error('Failed to fetch teachers')
       );
 
@@ -281,9 +281,6 @@ describe('Registration API', () => {
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Failed to fetch teachers');
-
-      // Reset mock
-      googleSheetsService.getTeachers.mockResolvedValue(['Mrs. Smith', 'Mr. Johnson']);
     });
   });
 
@@ -299,10 +296,8 @@ describe('Registration API', () => {
     });
 
     it('should handle errors when fetching metadata', async () => {
-      const { googleSheetsService } = require('../src/services/googleSheets');
-      
       // Make getFairMetadata throw an error
-      googleSheetsService.getFairMetadata.mockRejectedValueOnce(
+      jest.spyOn(sheetsService, 'getFairMetadata').mockRejectedValueOnce(
         new Error('Failed to fetch metadata')
       );
 
@@ -312,12 +307,6 @@ describe('Registration API', () => {
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toContain('Failed to fetch fair metadata');
-
-      // Reset mock
-      googleSheetsService.getFairMetadata.mockResolvedValue({
-        school: 'Test School',
-        contactEmail: 'test@example.com',
-      });
     });
   });
 

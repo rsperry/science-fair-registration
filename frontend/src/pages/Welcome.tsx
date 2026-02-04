@@ -1,35 +1,11 @@
 import { Container, Box, Typography, Button, Paper, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import ScienceIcon from '@mui/icons-material/Science';
-import { getFairMetadata } from '../services/api';
+import { useMetadata } from '../contexts/MetadataContext';
 
 const Welcome = () => {
   const navigate = useNavigate();
-  const [metadata, setMetadata] = useState({
-    school: '',
-    contactEmail: '',
-    registrationDeadline: '',
-    scienceFairDate: '',
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadMetadata = async () => {
-      try {
-        const data = await getFairMetadata();
-        setMetadata(data);
-        setError(null);
-      } catch (error) {
-        console.error('Failed to load metadata:', error);
-        setError('Unable to load science fair information. Please try again later or contact support.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadMetadata();
-  }, []);
+  const { metadata, loading, error, refetch } = useMetadata();
 
   const formatDate = (dateString: string): string => {
     try {
@@ -77,7 +53,7 @@ const Welcome = () => {
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
                 <Button
                   variant="contained"
-                  onClick={() => window.location.reload()}
+                  onClick={refetch}
                 >
                   Retry
                 </Button>
