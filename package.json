@@ -17,7 +17,7 @@
     "start:backend": "cd backend && cross-env NODE_ENV=production PORT=4000 FRONTEND_ORIGIN=http://localhost:4173 npm start",
     "start:frontend": "cd frontend && cross-env NODE_ENV=production VITE_API_URL=http://localhost:4000 npm start",
     "start:test": "concurrently \"npm run start:backend:test\" \"npm run start:frontend:test\"",
-    "start:backend:test": "cd backend && cross-env USE_MOCK_SHEETS=true NODE_ENV=production PORT=4000 FRONTEND_ORIGIN=http://localhost:4173 npm start",
+    "start:backend:test": "cd backend && cross-env USE_MOCK_SHEETS=true RATE_LIMIT_MAX=1000NODE_ENV=production PORT=4000 FRONTEND_ORIGIN=http://localhost:4173 npm start",
     "start:frontend:test": "cd frontend && cross-env NODE_ENV=production VITE_API_URL=http://localhost:4000 npm start",
     "build-and-start": "npm run build && npm start",
     "lint": "cd backend && npm run lint && cd ../frontend && npm run lint",

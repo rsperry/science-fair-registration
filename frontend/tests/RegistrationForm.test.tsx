@@ -310,6 +310,7 @@ describe('RegistrationForm Component', () => {
         projectName: 'Volcano',
         parentGuardianName: 'Jane Doe',
         parentGuardianEmail: 'jane@example.com',
+        parentWillingToVolunteer: false,
         consentGiven: true,
         additionalStudents: [],
       });
@@ -893,5 +894,68 @@ describe('RegistrationForm Component', () => {
       expect(screen.getByLabelText(/Student 2 Teacher/i)).toHaveTextContent('Mr. NoGrade');
     });
   });
-});
 
+  it('should handle undefined parentWillingToVolunteer gracefully', async () => {
+    const user = userEvent.setup();
+    const teachersWithDifferentGrades = [
+      { name: 'First Teacher', grade: '3' },
+      { name: 'Second Teacher', grade: '4' },
+    ];
+    mockedApi.getTeachers.mockResolvedValue(teachersWithDifferentGrades);
+
+    render(
+      <BrowserRouter>
+        <RegistrationForm />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Student Name/i)).toBeInTheDocument();
+    });
+
+    // The checkbox should be unchecked by default (undefined || false = false)
+    const checkbox = screen.getByLabelText(/I would like to volunteer for the fair/i);
+    expect(checkbox).not.toBeChecked();
+
+    // Click the checkbox to toggle it
+    await user.click(checkbox);
+
+    await waitFor(() => {
+      expect(checkbox).toBeChecked();
+    });
+  });
+
+  it('should handle undefined parentWillingToVolunteer for additional students', async () => {
+    const user = userEvent.setup();
+    mockedApi.getTeachers.mockResolvedValue(mockTeachers);
+
+    render(
+      <BrowserRouter>
+        <RegistrationForm />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Student Name/i)).toBeInTheDocument();
+    });
+
+    // Add an additional student
+    const addButton = screen.getByRole('button', { name: /Add Group Member/i });
+    await user.click(addButton);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Student 2 Name/i)).toBeInTheDocument();
+    });
+
+    // The checkbox should be unchecked by default for additional student
+    const checkbox = screen.getByLabelText(/Student 2 Parent\/Guardian willing to volunteer/i);
+    expect(checkbox).not.toBeChecked();
+
+    // Click the checkbox to toggle it
+    await user.click(checkbox);
+
+    await waitFor(() => {
+      expect(checkbox).toBeChecked();
+    });
+  });
+});

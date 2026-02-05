@@ -4,6 +4,7 @@ export interface AdditionalStudent {
   grade?: string;
   parentGuardianName?: string;
   parentGuardianEmail?: string;
+  parentWillingToVolunteer?: boolean;
 }
 
 export interface RegistrationFormData {
@@ -13,6 +14,7 @@ export interface RegistrationFormData {
   projectName?: string;
   parentGuardianName: string;
   parentGuardianEmail: string;
+  parentWillingToVolunteer?: boolean;
   consentGiven: boolean;
   additionalStudents: AdditionalStudent[];
 }

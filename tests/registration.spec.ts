@@ -111,9 +111,7 @@ test.describe('Science Fair Registration', () => {
     await expect(page.getByRole('heading', { name: /Registration Successful/i })).toBeVisible({ timeout: 10000 });
   });
 
-  test('should successfully register a project with 3 students', async ({ page, browserName }) => {
-    test.skip(browserName === 'webkit', 'Webkit has rendering issues with 3+ student forms');
-    
+  test('should successfully register a project with 3 students', async ({ page }) => {
     await fillPrimaryStudent(page, {
       name: 'Alice Johnson',
       projectName: 'Robotics Project',
@@ -138,9 +136,7 @@ test.describe('Science Fair Registration', () => {
     await expect(page.getByRole('heading', { name: /Registration Successful/i })).toBeVisible({ timeout: 60000 });
   });
 
-  test('should successfully register a project with 4 students (maximum)', async ({ page, browserName }) => {
-    test.skip(browserName === 'webkit', 'Webkit has rendering issues with 3+ student forms');
-    
+  test('should successfully register a project with 4 students (maximum)', async ({ page }) => {
     await fillPrimaryStudent(page, {
       name: 'Alice Johnson',
       projectName: 'Robotics Project',
@@ -348,5 +344,99 @@ test.describe('Registration Form Validation', () => {
     await page.getByRole('button', { name: 'Submit Registration' }).click();
 
     await expect(page.getByText(/valid email/i)).toBeVisible();
+  });
+
+  test('should successfully register with primary parent volunteer checkbox checked', async ({ page }) => {
+    const timestamp = Date.now();
+    await fillPrimaryStudent(page, {
+      name: `Alice Johnson ${timestamp}`,
+      projectName: `Science Project ${timestamp}`,
+      parentName: 'Bob Johnson',
+      parentEmail: `bob.johnson${timestamp}@example.com`
+    });
+
+    // Check the volunteer checkbox for primary parent - use exact text with period
+    const volunteerCheckbox = page.getByRole('checkbox', { name: /I would like to volunteer for the fair/i });
+    await volunteerCheckbox.scrollIntoViewIfNeeded();
+    await volunteerCheckbox.check();
+    await expect(volunteerCheckbox).toBeChecked();
+
+    await page.getByRole('checkbox', { name: 'Consent to terms' }).check();
+    
+    // Wait a bit before clicking submit to avoid rate limiting issues
+    await page.waitForTimeout(1000);
+    
+    await page.getByRole('button', { name: 'Submit Registration' }).click();
+
+    // Wait for confirmation page to load with increased timeout
+    await page.waitForLoadState('domcontentloaded', { timeout: 30000 });
+
+    await expect(page.getByRole('heading', { name: /Registration Successful/i })).toBeVisible({ timeout: 60000 });
+    await expect(page.getByText(/Project ID:/i)).toBeVisible();
+  });
+
+  test('should successfully register with additional parent volunteer checkbox checked', async ({ page }) => {
+    const timestamp = Date.now();
+    await fillPrimaryStudent(page, {
+      name: `Alice Johnson ${timestamp}`,
+      projectName: `Team Project ${timestamp}`,
+      parentName: 'Bob Johnson',
+      parentEmail: `bob.johnson${timestamp}@example.com`
+    });
+
+    // Add second student
+    await page.getByRole('button', { name: /Add Group Member/i }).click();
+    await expect(page.getByRole('heading', { name: 'Student 2' })).toBeVisible();
+    
+    await fillAdditionalStudent(page, 0, {
+      name: 'Charlie Brown',
+      parentName: 'David Brown',
+      parentEmail: 'david.brown@example.com'
+    });
+
+    // Check the volunteer checkbox for additional parent (Student 2)
+    const volunteerCheckbox = page.getByRole('checkbox', { name: /Student 2 Parent.*Guardian willing to volunteer/i });
+    await volunteerCheckbox.scrollIntoViewIfNeeded();
+    await volunteerCheckbox.check();
+    await expect(volunteerCheckbox).toBeChecked();
+
+    await page.getByRole('checkbox', { name: 'Consent to terms' }).check();
+    
+    // Wait a bit before clicking submit to avoid rate limiting issues
+    await page.waitForTimeout(1000);
+    
+    await page.getByRole('button', { name: 'Submit Registration' }).click();
+
+    // Wait for confirmation page to load with increased timeout
+    await page.waitForLoadState('domcontentloaded', { timeout: 30000 });
+
+    await expect(page.getByRole('heading', { name: /Registration Successful/i })).toBeVisible({ timeout: 60000 });
+    await expect(page.getByText(/Project ID:/i)).toBeVisible();
+  });
+
+  test('should fail validation when additional student is missing parent email', async ({ page }) => {
+    await fillPrimaryStudent(page, {
+      name: 'Alice Johnson',
+      parentName: 'Bob Johnson',
+      parentEmail: 'bob.johnson@example.com'
+    });
+
+    // Add second student without parent email
+    await page.getByRole('button', { name: /Add Group Member/i }).click();
+    await expect(page.getByRole('heading', { name: 'Student 2' })).toBeVisible();
+    
+    await page.getByRole('textbox', { name: /Student 2 Name/i }).fill('Charlie Brown');
+    await page.getByRole('combobox', { name: /Student 2 Teacher/i }).click();
+    await page.getByRole('option').first().waitFor({ state: 'visible' });
+    await page.getByRole('option').first().click();
+    
+    // Fill parent name but NOT email
+    await page.getByRole('textbox', { name: /Student 2 Parent.*Name/i }).fill('David Brown');
+
+    await page.getByRole('checkbox', { name: 'Consent to terms' }).check();
+    await page.getByRole('button', { name: 'Submit Registration' }).click();
+
+    // Should show validation error for missing parent email
+    await expect(page.getByText(/parent.*guardian.*email.*required/i)).toBeVisible();
   });
 });

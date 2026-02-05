@@ -66,6 +66,33 @@ describe('Registration Schema Validation', () => {
       expect(result.success).toBe(true);
     });
 
+    it('should validate registration with parentWillingToVolunteer field', () => {
+      const validData = {
+        studentName: 'John Doe',
+        teacher: 'Mrs. Smith',
+        parentGuardianName: 'Jane Doe',
+        parentGuardianEmail: 'jane@example.com',
+        parentWillingToVolunteer: true,
+        consentGiven: true,
+      };
+
+      const result = registrationSchema.safeParse(validData);
+      expect(result.success).toBe(true);
+    });
+
+    it('should validate registration without parentWillingToVolunteer field', () => {
+      const validData = {
+        studentName: 'John Doe',
+        teacher: 'Mrs. Smith',
+        parentGuardianName: 'Jane Doe',
+        parentGuardianEmail: 'jane@example.com',
+        consentGiven: true,
+      };
+
+      const result = registrationSchema.safeParse(validData);
+      expect(result.success).toBe(true);
+    });
+
     it('should reject missing student name', () => {
       const invalidData = {
         studentName: '',
@@ -294,6 +321,20 @@ describe('Registration Schema Validation', () => {
         grade: '5',
         parentGuardianName: 'Bob Smith',
         parentGuardianEmail: 'bob@example.com',
+      };
+
+      const result = additionalStudentSchema.safeParse(validData);
+      expect(result.success).toBe(true);
+    });
+
+    it('should validate additional student with parentWillingToVolunteer field', () => {
+      const validData = {
+        studentName: 'Alice Smith',
+        teacher: 'Mr. Johnson',
+        grade: '5',
+        parentGuardianName: 'Bob Smith',
+        parentGuardianEmail: 'bob@example.com',
+        parentWillingToVolunteer: true,
       };
 
       const result = additionalStudentSchema.safeParse(validData);

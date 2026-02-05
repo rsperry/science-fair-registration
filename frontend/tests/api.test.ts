@@ -141,6 +141,83 @@ describe('API Service', () => {
       expect(result.success).toBe(true);
       expect(result.projectId).toBe(67890);
     });
+
+    it('should include parentWillingToVolunteer field when true', async () => {
+      const mockFormData: RegistrationFormData = {
+        studentName: 'John Doe',
+        teacher: 'Mrs. Smith',
+        projectName: 'Volunteer Project',
+        parentGuardianName: 'Jane Doe',
+        parentGuardianEmail: 'jane@example.com',
+        parentWillingToVolunteer: true,
+        consentGiven: true,
+        additionalStudents: [],
+      };
+
+      const mockResponse = {
+        data: {
+          success: true,
+          projectId: 11111,
+          timestamp: '2025-11-25T12:00:00Z',
+          message: 'Registration successful',
+        },
+      };
+
+      mockPost.mockResolvedValue(mockResponse);
+
+      const result = await registerProject(mockFormData);
+
+      expect(mockPost).toHaveBeenCalledWith('/register', mockFormData);
+      expect(result.success).toBe(true);
+      expect(result.projectId).toBe(11111);
+    });
+
+    it('should include parentWillingToVolunteer in additional students', async () => {
+      const mockFormData: RegistrationFormData = {
+        studentName: 'John Doe',
+        teacher: 'Mrs. Smith',
+        projectName: 'Group Volunteer Project',
+        parentGuardianName: 'Jane Doe',
+        parentGuardianEmail: 'jane@example.com',
+        parentWillingToVolunteer: true,
+        consentGiven: true,
+        additionalStudents: [
+          { 
+            studentName: 'Alice Smith', 
+            teacher: 'Mrs. Smith', 
+            grade: '5',
+            parentGuardianName: 'Bob Smith',
+            parentGuardianEmail: 'bob@example.com',
+            parentWillingToVolunteer: false,
+          },
+          { 
+            studentName: 'Charlie Brown', 
+            teacher: 'Mr. Johnson', 
+            grade: '5',
+            parentGuardianName: 'David Brown',
+            parentGuardianEmail: 'david@example.com',
+            parentWillingToVolunteer: true,
+          },
+        ],
+      };
+
+      const mockResponse = {
+        data: {
+          success: true,
+          projectId: 22222,
+          timestamp: '2025-11-25T13:00:00Z',
+          message: 'Group registration successful',
+        },
+      };
+
+      mockPost.mockResolvedValue(mockResponse);
+
+      const result = await registerProject(mockFormData);
+
+      expect(mockPost).toHaveBeenCalledWith('/register', mockFormData);
+      expect(result.success).toBe(true);
+      expect(result.projectId).toBe(22222);
+    });
   });
 
   describe('getTeachers', () => {

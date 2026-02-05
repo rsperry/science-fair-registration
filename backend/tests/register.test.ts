@@ -133,6 +133,65 @@ describe('Registration API', () => {
       expect(response.body.success).toBe(true);
     });
 
+    it('should register with parent willing to volunteer', async () => {
+      const validData = {
+        studentName: 'John Doe',
+        teacher: 'Mrs. Smith',
+        projectName: 'Science Project',
+        parentGuardianName: 'Jane Doe',
+        parentGuardianEmail: 'jane@example.com',
+        parentWillingToVolunteer: true,
+        consentGiven: true,
+      };
+
+      const response = await request(app)
+        .post('/api/register')
+        .send(validData)
+        .expect(201);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.projectId).toBe(100);
+    });
+
+    it('should register with additional students and volunteer flags', async () => {
+      const validData = {
+        studentName: 'John Doe',
+        teacher: 'Mrs. Smith',
+        grade: '5',
+        projectName: 'Team Project',
+        parentGuardianName: 'Jane Doe',
+        parentGuardianEmail: 'jane@example.com',
+        parentWillingToVolunteer: true,
+        consentGiven: true,
+        additionalStudents: [
+          {
+            studentName: 'Alice Smith',
+            teacher: 'Mr. Johnson',
+            grade: '5',
+            parentGuardianName: 'Bob Smith',
+            parentGuardianEmail: 'bob@example.com',
+            parentWillingToVolunteer: false,
+          },
+          {
+            studentName: 'Charlie Brown',
+            teacher: 'Mrs. Davis',
+            grade: '6',
+            parentGuardianName: 'David Brown',
+            parentGuardianEmail: 'david@example.com',
+            parentWillingToVolunteer: true,
+          },
+        ],
+      };
+
+      const response = await request(app)
+        .post('/api/register')
+        .send(validData)
+        .expect(201);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.projectId).toBe(100);
+    });
+
     it('should reject registration without required fields', async () => {
       const invalidData = {
         studentName: '',

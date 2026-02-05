@@ -40,6 +40,7 @@ const RegistrationForm = () => {
     projectName: '',
     parentGuardianName: '',
     parentGuardianEmail: '',
+    parentWillingToVolunteer: false,
     consentGiven: false,
     additionalStudents: [],
   });
@@ -82,7 +83,7 @@ const RegistrationForm = () => {
   const handleAdditionalStudentChange = (
     index: number,
     field: keyof AdditionalStudent,
-    value: string
+    value: string | boolean
   ) => {
     const updated = [...formData.additionalStudents];
     updated[index] = { ...updated[index], [field]: value };
@@ -148,7 +149,12 @@ const RegistrationForm = () => {
       if (!student.teacher) {
         errors[`additionalStudent${index}.teacher`] = 'Teacher is required';
       }
-      if (student.parentGuardianEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(student.parentGuardianEmail)) {
+      if (!student.parentGuardianName?.trim()) {
+        errors[`additionalStudent${index}.parentGuardianName`] = 'Parent/Guardian name is required';
+      }
+      if (!student.parentGuardianEmail?.trim()) {
+        errors[`additionalStudent${index}.parentGuardianEmail`] = 'Parent/Guardian email is required';
+      } else if (student.parentGuardianEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(student.parentGuardianEmail)) {
         errors[`additionalStudent${index}.parentGuardianEmail`] = 'Please enter a valid email address';
       }
     });
@@ -218,7 +224,7 @@ const RegistrationForm = () => {
       </Snackbar>
 
       <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-        Primary Student Information
+        Student Information
       </Typography>
 
       {teachersError && (
@@ -334,6 +340,18 @@ const RegistrationForm = () => {
         inputProps={{ 'aria-label': 'Parent/Guardian Email' }}
       />
 
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={formData.parentWillingToVolunteer || false}
+            onChange={(e) => handleChange('parentWillingToVolunteer', e.target.checked)}
+            inputProps={{ 'aria-label': 'I would like to volunteer for the fair' }}
+          />
+        }
+        label="I would like to volunteer for the fair."
+        sx={{ mt: 1, mb: 2, display: 'flex', width: '100%' }}
+      />
+
       {/* Additional Students Section */}
       {formData.additionalStudents.length > 0 && (
         <>
@@ -425,20 +443,24 @@ const RegistrationForm = () => {
 
           <TextField
             fullWidth
-            label="Parent/Guardian Name (Optional)"
+            required
+            label="Parent/Guardian Name"
             value={student.parentGuardianName || ''}
             onChange={(e) =>
               handleAdditionalStudentChange(index, 'parentGuardianName', e.target.value)
             }
             margin="normal"
+            error={!!fieldErrors[`additionalStudent${index}.parentGuardianName`]}
+            helperText={fieldErrors[`additionalStudent${index}.parentGuardianName`]}
             inputProps={{ 'aria-label': `Student ${index + 2} Parent/Guardian Name` }}
             inputRef={(el) => (additionalStudentParentRefs.current[index] = el)}
           />
 
           <TextField
             fullWidth
+            required
             type="email"
-            label="Parent/Guardian Email (Optional)"
+            label="Parent/Guardian Email"
             value={student.parentGuardianEmail || ''}
             onChange={(e) =>
               handleAdditionalStudentChange(index, 'parentGuardianEmail', e.target.value)
@@ -447,6 +469,20 @@ const RegistrationForm = () => {
             helperText={fieldErrors[`additionalStudent${index}.parentGuardianEmail`]}
             margin="normal"
             inputProps={{ 'aria-label': `Student ${index + 2} Parent/Guardian Email` }}
+          />
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={student.parentWillingToVolunteer || false}
+                onChange={(e) =>
+                  handleAdditionalStudentChange(index, 'parentWillingToVolunteer', e.target.checked)
+                }
+                inputProps={{ 'aria-label': `Student ${index + 2} Parent/Guardian willing to volunteer` }}
+              />
+            }
+            label="Parent/Guardian is willing to volunteer for the fair."
+            sx={{ mt: 1, mb: 2, display: 'flex', width: '100%' }}
           />
         </Box>
       ))}
@@ -458,7 +494,7 @@ const RegistrationForm = () => {
           onClick={addAdditionalStudent}
           sx={{ mt: 2, mb: 3 }}
         >
-          Add Group Member (up to 3 additional students)
+          Add Group Member (Up to 4 total students per group)
         </Button>
       )}
 
@@ -472,6 +508,7 @@ const RegistrationForm = () => {
             inputProps={{ 'aria-label': 'Consent to terms' }}
           />
         }
+        sx={{ display: 'flex', width: '100%', mb: 2 }}
         label={
           <Typography variant="body2" component="span">
             I consent to the collection, storage, processing, and use of the data provided in this form according to the{' '}

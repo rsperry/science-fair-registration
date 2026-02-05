@@ -58,7 +58,7 @@ Use this checklist to verify your setup is complete and working correctly.
 - [ ] Teacher dropdown populated
 - [ ] All form fields are editable
 - [ ] "Add Group Member" button works
-- [ ] Can add up to 3 additional students
+- [ ] Can add up to 4 total students per group
 - [ ] Can remove additional students
 - [ ] Form validation shows errors for invalid input
 - [ ] Email validation works
