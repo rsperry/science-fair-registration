@@ -3,7 +3,7 @@
  * This mock service simulates Google Sheets API responses for testing purposes
  */
 
-import { SheetRow } from '../types/registration';
+import { SheetRow } from '../src/types/registration';
 
 let mockProjectId = 100;
 const mockRegistrations: SheetRow[] = [];

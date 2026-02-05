@@ -3,7 +3,7 @@
  * Exports either the real Google Sheets service or a mock for testing
  */
 
-import { mockSheetsService } from './mockSheetsService';
+import { mockSheetsService } from '../../tests/mockSheetsService';
 import { SheetRow } from '../types/registration';
 
 // Define a common interface
