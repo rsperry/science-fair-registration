@@ -4,6 +4,7 @@ export interface AdditionalStudent {
   grade?: string;
   parentGuardianName?: string;
   parentGuardianEmail?: string;
+  parentWillingToVolunteer?: boolean;
 }
 
 export interface RegistrationRequest {
@@ -13,6 +14,7 @@ export interface RegistrationRequest {
   projectName?: string;
   parentGuardianName: string;
   parentGuardianEmail: string;
+  parentWillingToVolunteer?: boolean;
   consentGiven: boolean;
   additionalStudents?: AdditionalStudent[];
 }
@@ -33,21 +35,25 @@ export interface SheetRow {
   grade?: string;
   parentGuardianName: string;
   parentGuardianEmail: string;
+  parentWillingToVolunteer?: boolean;
   student2Name?: string;
   student2Teacher?: string;
   student2Grade?: string;
   student2ParentGuardianName?: string;
   student2ParentGuardianEmail?: string;
+  student2ParentWillingToVolunteer?: boolean;
   student3Name?: string;
   student3Teacher?: string;
   student3Grade?: string;
   student3ParentGuardianName?: string;
   student3ParentGuardianEmail?: string;
+  student3ParentWillingToVolunteer?: boolean;
   student4Name?: string;
   student4Teacher?: string;
   student4Grade?: string;
   student4ParentGuardianName?: string;
   student4ParentGuardianEmail?: string;
+  student4ParentWillingToVolunteer?: boolean;
   timestamp: string;
 }
 
@@ -59,4 +65,5 @@ export interface StudentRow {
   grade?: string;
   parentGuardianName: string;
   parentGuardianEmail: string;
+  parentWillingToVolunteer?: boolean;
 }

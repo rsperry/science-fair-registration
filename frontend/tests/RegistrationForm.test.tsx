@@ -310,6 +310,7 @@ describe('RegistrationForm Component', () => {
         projectName: 'Volcano',
         parentGuardianName: 'Jane Doe',
         parentGuardianEmail: 'jane@example.com',
+        parentWillingToVolunteer: false,
         consentGiven: true,
         additionalStudents: [],
       });
