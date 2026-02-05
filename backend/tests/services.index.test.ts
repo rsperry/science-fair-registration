@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 describe('services/index', () => {
   beforeEach(() => {
     // Clear module cache before each test

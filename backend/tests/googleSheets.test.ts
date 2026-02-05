@@ -5,10 +5,22 @@ import { SheetRow } from '../src/types/registration';
 // Mock googleapis
 jest.mock('googleapis');
 
+// Type for mock call arguments
+type MockCallArgs = [{ range: string; requestBody?: { values: unknown[] }; spreadsheetId?: string; valueInputOption?: string }];
+
 describe('GoogleSheetsService', () => {
   let service: GoogleSheetsService;
-  let mockSheets: any;
-  let mockAuth: any;
+  let mockSheets: {
+    spreadsheets: {
+      values: {
+        get: jest.Mock;
+        append: jest.Mock;
+      };
+    };
+  };
+  let mockAuth: {
+    GoogleAuth: jest.Mock;
+  };
 
   beforeEach(() => {
     // Reset mocks before each test
@@ -30,6 +42,7 @@ describe('GoogleSheetsService', () => {
     };
 
     // Mock google.auth and google.sheets
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (google as any).auth = mockAuth;
     (google.sheets as jest.Mock).mockReturnValue(mockSheets);
 
@@ -262,7 +275,7 @@ describe('GoogleSheetsService', () => {
 
       // Check that 3 students were added to Students sheet
       const studentsCall = mockSheets.spreadsheets.values.append.mock.calls.find(
-        (call: any) => call[0].range === 'Registrations-Students!A:H'
+        (call: MockCallArgs) => call[0].range === 'Registrations-Students!A:H'
       );
       expect(studentsCall[0].requestBody.values).toHaveLength(3);
     });
@@ -295,7 +308,7 @@ describe('GoogleSheetsService', () => {
 
       // Check that only 2 students were added to Students sheet
       const studentsCall = mockSheets.spreadsheets.values.append.mock.calls.find(
-        (call: any) => call[0].range === 'Registrations-Students!A:H'
+        (call: MockCallArgs) => call[0].range === 'Registrations-Students!A:H'
       );
       expect(studentsCall[0].requestBody.values).toHaveLength(2);
     });
@@ -340,7 +353,7 @@ describe('GoogleSheetsService', () => {
 
       // Check that 4 students were added to Students sheet
       const studentsCall = mockSheets.spreadsheets.values.append.mock.calls.find(
-        (call: any) => call[0].range === 'Registrations-Students!A:H'
+        (call: MockCallArgs) => call[0].range === 'Registrations-Students!A:H'
       );
       expect(studentsCall[0].requestBody.values).toHaveLength(4);
 
@@ -374,7 +387,7 @@ describe('GoogleSheetsService', () => {
 
       // Check that undefined volunteer flag is converted to FALSE
       const projectsCall = mockSheets.spreadsheets.values.append.mock.calls.find(
-        (call: any) => call[0].range === 'Registrations-Projects!A:AB'
+        (call: MockCallArgs) => call[0].range === 'Registrations-Projects!A:AB'
       );
       expect(projectsCall[0].requestBody.values[0][8]).toBe('FALSE');
     });
@@ -459,7 +472,7 @@ describe('GoogleSheetsService', () => {
 
       // Check that empty fields are converted to empty strings
       const projectsCall = mockSheets.spreadsheets.values.append.mock.calls.find(
-        (call: any) => call[0].range === 'Registrations-Projects!A:AB'
+        (call: MockCallArgs) => call[0].range === 'Registrations-Projects!A:AB'
       );
       expect(projectsCall[0].requestBody.values[0][5]).toBe(''); // grade
     });
@@ -491,7 +504,7 @@ describe('GoogleSheetsService', () => {
 
       // Check that student 2 row has empty strings for missing fields
       const studentsCall = mockSheets.spreadsheets.values.append.mock.calls.find(
-        (call: any) => call[0].range === 'Registrations-Students!A:H'
+        (call: MockCallArgs) => call[0].range === 'Registrations-Students!A:H'
       );
       const student2Row = studentsCall[0].requestBody.values[1];
       expect(student2Row[3]).toBe(''); // teacher
@@ -522,7 +535,7 @@ describe('GoogleSheetsService', () => {
 
       // Check that student 3 row has empty strings for missing fields
       const studentsCall = mockSheets.spreadsheets.values.append.mock.calls.find(
-        (call: any) => call[0].range === 'Registrations-Students!A:H'
+        (call: MockCallArgs) => call[0].range === 'Registrations-Students!A:H'
       );
       const student3Row = studentsCall[0].requestBody.values[1];
       expect(student3Row[3]).toBe(''); // teacher
@@ -553,7 +566,7 @@ describe('GoogleSheetsService', () => {
 
       // Check that student 4 row has empty strings for missing fields
       const studentsCall = mockSheets.spreadsheets.values.append.mock.calls.find(
-        (call: any) => call[0].range === 'Registrations-Students!A:H'
+        (call: MockCallArgs) => call[0].range === 'Registrations-Students!A:H'
       );
       const student4Row = studentsCall[0].requestBody.values[1];
       expect(student4Row[3]).toBe(''); // teacher
@@ -583,7 +596,7 @@ describe('GoogleSheetsService', () => {
 
       // Check that student row has empty string for missing projectName
       const studentsCall = mockSheets.spreadsheets.values.append.mock.calls.find(
-        (call: any) => call[0].range === 'Registrations-Students!A:H'
+        (call: MockCallArgs) => call[0].range === 'Registrations-Students!A:H'
       );
       expect(studentsCall[0].requestBody.values[0][1]).toBe(''); // projectName
     });
@@ -609,7 +622,7 @@ describe('GoogleSheetsService', () => {
 
       // Check that student row has empty string for missing grade
       const studentsCall = mockSheets.spreadsheets.values.append.mock.calls.find(
-        (call: any) => call[0].range === 'Registrations-Students!A:H'
+        (call: MockCallArgs) => call[0].range === 'Registrations-Students!A:H'
       );
       expect(studentsCall[0].requestBody.values[0][4]).toBe(''); // grade
     });
