@@ -18,7 +18,7 @@ describe('services/index', () => {
     process.env.USE_MOCK_SHEETS = 'true';
     delete process.env.CI;
     const { sheetsService } = require('../src/services/index');
-    const { mockSheetsService } = require('./mockSheetsService');
+    const { mockSheetsService } = require('../src/services/mockSheetsService');
     
     expect(sheetsService).toBe(mockSheetsService);
   });
@@ -27,7 +27,7 @@ describe('services/index', () => {
     process.env.CI = 'true';
     delete process.env.USE_MOCK_SHEETS;
     const { sheetsService } = require('../src/services/index');
-    const { mockSheetsService } = require('./mockSheetsService');
+    const { mockSheetsService } = require('../src/services/mockSheetsService');
     
     expect(sheetsService).toBe(mockSheetsService);
   });
@@ -40,7 +40,7 @@ describe('services/index', () => {
     const { sheetsService } = require('../src/services/index');
     
     // Just verify it's not the mock service
-    const { mockSheetsService } = require('./mockSheetsService');
+    const { mockSheetsService } = require('../src/services/mockSheetsService');
     expect(sheetsService).not.toBe(mockSheetsService);
   });
 });
