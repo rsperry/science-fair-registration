@@ -1,22 +1,36 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 describe('services/index', () => {
-  const originalEnv = { ...process.env };
+  let originalUseMockSheets: string | undefined;
+  let originalCI: string | undefined;
 
   beforeEach(() => {
+    // Save original environment variables
+    originalUseMockSheets = process.env.USE_MOCK_SHEETS;
+    originalCI = process.env.CI;
+    
     // Clear module cache before each test
     jest.resetModules();
-    // Reset environment to original state
-    process.env = { ...originalEnv };
   });
 
   afterEach(() => {
-    // Restore original environment
-    process.env = originalEnv;
+    // Restore original environment variables
+    if (originalUseMockSheets !== undefined) {
+      process.env.USE_MOCK_SHEETS = originalUseMockSheets;
+    } else {
+      delete process.env.USE_MOCK_SHEETS;
+    }
+    
+    if (originalCI !== undefined) {
+      process.env.CI = originalCI;
+    } else {
+      delete process.env.CI;
+    }
   });
 
   it('should export mock service when USE_MOCK_SHEETS is true', () => {
     process.env.USE_MOCK_SHEETS = 'true';
     delete process.env.CI;
+    
     const { sheetsService } = require('../src/services/index');
     const { mockSheetsService } = require('../src/services/mockSheetsService');
     
@@ -26,6 +40,7 @@ describe('services/index', () => {
   it('should export mock service when CI is true', () => {
     process.env.CI = 'true';
     delete process.env.USE_MOCK_SHEETS;
+    
     const { sheetsService } = require('../src/services/index');
     const { mockSheetsService } = require('../src/services/mockSheetsService');
     
