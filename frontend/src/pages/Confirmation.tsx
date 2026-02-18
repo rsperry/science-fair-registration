@@ -34,10 +34,6 @@ const Confirmation = () => {
             Registration Successful!
           </Typography>
 
-          <Typography variant="body1" align="center" color="text.secondary" paragraph>
-            Thank you for registering your science fair project. Your registration has been confirmed.
-          </Typography>
-
           <Box
             sx={{
               my: 4,
@@ -48,23 +44,12 @@ const Confirmation = () => {
               borderColor: 'primary.main',
             }}
           >
-            <Typography variant="h6" gutterBottom>
-              Registration Details
-            </Typography>
-            
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="body1" gutterBottom>
-                <strong>Project ID:</strong> {projectId}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                <strong>Registration Date:</strong> {formattedDate}
-              </Typography>
+            <Box sx={{ mt: 2 }}>            
+            Thank you for registering your science fair project. Your registration has been confirmed.<br /><br />
+            <b>Watch for an email after registration closes with further details on the project dropoff, family and friends showcase, and assigned project number.</b><br /><br />
+            We look forward to seeing your project at the science fair!
             </Box>
           </Box>
-
-          <Typography variant="body2" color="text.secondary" paragraph>
-            You will receive a confirmation email shortly with next steps and additional information about the science fair.
-          </Typography>
 
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
             <Button

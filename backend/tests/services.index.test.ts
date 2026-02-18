@@ -1,4 +1,32 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
+
+// Mock googleapis before any imports
+jest.mock('googleapis');
+
+// Mock config before any imports to prevent GoogleSheetsService constructor from failing
+jest.mock('../src/config', () => ({
+  config: {
+    nodeEnv: 'test',
+    port: 3001,
+    frontendOrigin: 'http://localhost:5173',
+    googleSheetsId: 'test-sheet-id',
+    googleServiceAccountKey: Buffer.from(JSON.stringify({
+      type: 'service_account',
+      project_id: 'test-project',
+      private_key_id: 'test-key-id',
+      private_key: '-----BEGIN PRIVATE KEY-----\ntest\n-----END PRIVATE KEY-----\n',
+      client_email: 'test@test.iam.gserviceaccount.com',
+      client_id: '123456789',
+      auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+      token_uri: 'https://oauth2.googleapis.com/token',
+      auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
+      client_x509_cert_url: 'https://www.googleapis.com/robot/v1/metadata/x509/test%40test.iam.gserviceaccount.com'
+    })).toString('base64'),
+    rateLimitWindow: 15,
+    rateLimitMax: 10
+  }
+}));
+
 describe('services/index', () => {
   let originalUseMockSheets: string | undefined;
   let originalCI: string | undefined;
@@ -10,6 +38,20 @@ describe('services/index', () => {
     
     // Clear module cache before each test
     jest.resetModules();
+    
+    // Set up googleapis mock for each test
+    const mockGoogle = require('googleapis').google as jest.Mocked<typeof import('googleapis').google>;
+    mockGoogle.auth = {
+      GoogleAuth: jest.fn().mockImplementation(() => ({})),
+    } as unknown as typeof mockGoogle.auth;
+    mockGoogle.sheets = jest.fn().mockReturnValue({
+      spreadsheets: {
+        values: {
+          get: jest.fn(),
+          append: jest.fn(),
+        },
+      },
+    }) as unknown as typeof mockGoogle.sheets;
   });
 
   afterEach(() => {

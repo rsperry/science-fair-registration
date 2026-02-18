@@ -1,9 +1,35 @@
-import { GoogleSheetsService } from '../src/services/googleSheets';
 import { google } from 'googleapis';
 import { SheetRow } from '../src/types/registration';
 
-// Mock googleapis
+// Mock googleapis before importing GoogleSheetsService
 jest.mock('googleapis');
+
+// Mock config to provide valid credentials for testing
+jest.mock('../src/config', () => ({
+  config: {
+    nodeEnv: 'test',
+    port: 4000,
+    frontendOrigin: 'http://localhost:5173',
+    googleSheetsId: 'test-sheet-id',
+    googleServiceAccountKey: Buffer.from(JSON.stringify({
+      type: 'service_account',
+      project_id: 'test-project',
+      private_key_id: 'test-key-id',
+      private_key: '-----BEGIN PRIVATE KEY-----\ntest\n-----END PRIVATE KEY-----\n',
+      client_email: 'test@test-project.iam.gserviceaccount.com',
+      client_id: 'test-client-id',
+      auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+      token_uri: 'https://oauth2.googleapis.com/token',
+      auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
+      client_x509_cert_url: 'https://www.googleapis.com/test'
+    })).toString('base64'),
+    rateLimitWindow: 3600000,
+    rateLimitMax: 10,
+  },
+}));
+
+// Now import GoogleSheetsService after mocks are set up
+import { GoogleSheetsService } from '../src/services/googleSheets';
 
 // Type for mock call arguments
 type MockCallArgs = [{ range: string; requestBody?: { values: unknown[] }; spreadsheetId?: string; valueInputOption?: string }];

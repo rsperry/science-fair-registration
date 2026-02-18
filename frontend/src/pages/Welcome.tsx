@@ -1,4 +1,4 @@
-import { Container, Box, Typography, Button, Paper, CircularProgress } from '@mui/material';
+import { Container, Box, Typography, Button, Paper, CircularProgress, Divider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ScienceIcon from '@mui/icons-material/Science';
 import { useMetadata } from '../contexts/MetadataContext';
@@ -73,27 +73,54 @@ const Welcome = () => {
               </Typography> */}
 
               <Box sx={{ my: 4 }}>
-                <Typography variant="body1" paragraph>
-                  Welcome to the {loading ? '' : `${metadata.school} `} Science Fair registration portal! Please review the following information before registering your project.
-                </Typography>
-
-                <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+                <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
                   Important Dates
                 </Typography>
                 <Typography variant="body1" paragraph>
                   • Registration Deadline: {loading ? <CircularProgress size={14} sx={{ ml: 1 }} /> : formatDate(metadata.registrationDeadline)}<br />
+                  • Showcase for Family & Friends: {loading ? <CircularProgress size={14} sx={{ ml: 1 }} /> : formatDate(new Date(new Date(metadata.scienceFairDate).getTime() - 24 * 60 * 60 * 1000).toISOString())}<br />
                   • Science Fair Event: {loading ? <CircularProgress size={14} sx={{ ml: 1 }} /> : formatDate(metadata.scienceFairDate)}
                 </Typography>
 
-                <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                  Rules and Guidelines
+                <Divider sx={{ my: 4 }} />
+
+                <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                  Reminders and Guidelines
+                </Typography>
+                <Typography variant="body1" paragraph>
+                  The Washington Science Fair is open to all students and we want it to be a positive experience for everyone!
                 </Typography>
                 <Typography variant="body1" paragraph>
                   • Projects can be individual or group (up to 4 students)<br />
                   • All students must have parent/guardian consent<br />
-                  • Projects must follow the scientific method<br />
-                  • No live vertebrate animals or hazardous materials<br />
-                  • Students must be prepared to present their findings
+                  • Projects can be an experiment, demonstration, model or diagram, collection, or report<br />
+                  • Most students find it helpful to display their project on a tri-fold board, but this is not required<br />
+                  • Any messy projects must be contained to prevent spills<br />
+                  • All projects must be latex-free<br />
+                  • When possible, projects should follow the scientific method<br />
+                  • Students should be prepared to present their findings to an adult judge<br />
+                  • All students will receive a participation ribbon and feedback on a review form
+                </Typography>
+                
+                <Divider sx={{ my: 4 }} />
+
+                <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                  Review Criteria
+                </Typography>
+                <Typography variant="body1" paragraph>
+                  All projects will be evaluated based on the following criteria depending on project type:
+                </Typography>
+                <Typography variant="body1" component="div" paragraph>
+                  • Project title<br />
+                  • Experiment: hypothesis stated<br />
+                  • Demonstration: picture, drawing, or description of procedure included<br />
+                  • Experiment/Demonstration: results, discussion, or conclusion included<br />
+                  • Model: clear what the model represents<br />
+                  • Report: data recorded<br />
+                  • Collection: items neatly labeled<br />
+                  • Evidence of research (at least 2 sources)<br />
+                  • Display organization<br />
+                  • Explanation of what was learned
                 </Typography>
               </Box>
 
