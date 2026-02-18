@@ -7,20 +7,13 @@ const Confirmation = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { projectId, timestamp } = location.state || {};
+  const { projectId } = location.state || {};
 
   // If no data, redirect to home
   if (!projectId) {
     setTimeout(() => navigate('/'), 100);
     return null;
   }
-
-  const formattedDate = timestamp
-    ? new Date(timestamp).toLocaleString('en-US', {
-        dateStyle: 'long',
-        timeStyle: 'short',
-      })
-    : '';
 
   return (
     <Container maxWidth="md">
