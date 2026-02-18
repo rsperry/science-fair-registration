@@ -77,28 +77,32 @@ export class GoogleSheetsService {
         row.grade || '', // Student 1 Grade
         row.parentGuardianName, // Student 1 Parent Name
         row.parentGuardianEmail, // Student 1 Parent Email
+        row.parentWillingToVolunteer ? 'TRUE' : 'FALSE', // Student 1 Parent Willing to Volunteer
         row.student2Name || '',
         row.student2Teacher || '',
         row.student2Grade || '',
         row.student2ParentGuardianName || '',
         row.student2ParentGuardianEmail || '',
+        row.student2ParentWillingToVolunteer ? 'TRUE' : 'FALSE', // Student 2 Parent Willing to Volunteer
         row.student3Name || '',
         row.student3Teacher || '',
         row.student3Grade || '',
         row.student3ParentGuardianName || '',
         row.student3ParentGuardianEmail || '',
+        row.student3ParentWillingToVolunteer ? 'TRUE' : 'FALSE', // Student 3 Parent Willing to Volunteer
         row.student4Name || '',
         row.student4Teacher || '',
         row.student4Grade || '',
         row.student4ParentGuardianName || '',
         row.student4ParentGuardianEmail || '',
+        row.student4ParentWillingToVolunteer ? 'TRUE' : 'FALSE', // Student 4 Parent Willing to Volunteer
         row.timestamp,
       ]);
 
       console.log('Adding row to Registrations-Projects');
       await this.sheets.spreadsheets.values.append({
         spreadsheetId: config.googleSheetsId,
-        range: 'Registrations-Projects!A:X',
+        range: 'Registrations-Projects!A:AB',
         valueInputOption: 'RAW',
         requestBody: {
           values: projectValues,
@@ -120,6 +124,7 @@ export class GoogleSheetsService {
             grade: row.grade,
             parentGuardianName: row.parentGuardianName,
             parentGuardianEmail: row.parentGuardianEmail,
+            parentWillingToVolunteer: row.parentWillingToVolunteer,
           });
 
           // Add student 2 if exists
@@ -132,6 +137,7 @@ export class GoogleSheetsService {
               grade: row.student2Grade,
               parentGuardianName: row.student2ParentGuardianName || '',
               parentGuardianEmail: row.student2ParentGuardianEmail || '',
+              parentWillingToVolunteer: row.student2ParentWillingToVolunteer,
             });
           }
 
@@ -145,6 +151,7 @@ export class GoogleSheetsService {
               grade: row.student3Grade,
               parentGuardianName: row.student3ParentGuardianName || '',
               parentGuardianEmail: row.student3ParentGuardianEmail || '',
+              parentWillingToVolunteer: row.student3ParentWillingToVolunteer,
             });
           }
 
@@ -158,6 +165,7 @@ export class GoogleSheetsService {
               grade: row.student4Grade,
               parentGuardianName: row.student4ParentGuardianName || '',
               parentGuardianEmail: row.student4ParentGuardianEmail || '',
+              parentWillingToVolunteer: row.student4ParentWillingToVolunteer,
             });
           }
         }
@@ -173,12 +181,13 @@ export class GoogleSheetsService {
           student.grade || '',
           student.parentGuardianName,
           student.parentGuardianEmail,
+          student.parentWillingToVolunteer ? 'TRUE' : 'FALSE',
         ]);
 
         console.log('Adding rows to Registrations-Students');
         await this.sheets.spreadsheets.values.append({
           spreadsheetId: config.googleSheetsId,
-          range: 'Registrations-Students!A:G',
+          range: 'Registrations-Students!A:H',
           valueInputOption: 'RAW',
           requestBody: {
             values: studentValues,

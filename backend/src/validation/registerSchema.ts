@@ -14,6 +14,7 @@ export const additionalStudentSchema = z.object({
       message: 'Invalid email format',
     })
     .optional(),
+  parentWillingToVolunteer: z.boolean().optional(),
 });
 
 export const registrationSchema = z.object({
@@ -29,6 +30,7 @@ export const registrationSchema = z.object({
     .refine((email) => emailRegex.test(email), {
       message: 'Invalid email format',
     }),
+  parentWillingToVolunteer: z.boolean().optional(),
   consentGiven: z.boolean().refine((val) => val === true, {
     message: 'Consent must be given to register',
   }),
