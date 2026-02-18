@@ -851,6 +851,75 @@ describe('RegistrationForm Component', () => {
     });
   });
 
+  it('should sort grade X teachers to the end of the primary teacher list', async () => {
+    const teachersWithGradeX = [
+      { name: 'Mr. Cross', grade: 'X' },
+      { name: 'Mrs. Kinder', grade: 'K' },
+      { name: 'Ms. Fifth', grade: '5' },
+      { name: 'Mr. Third', grade: '3' },
+    ];
+    mockedApi.getTeachers.mockResolvedValue(teachersWithGradeX);
+
+    render(
+      <BrowserRouter>
+        <RegistrationForm />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/^Teacher$/i)).toBeInTheDocument();
+    });
+
+    const user = userEvent.setup();
+    await user.click(screen.getByLabelText(/^Teacher$/i));
+
+    await waitFor(() => {
+      const options = screen.getAllByRole('option');
+      // X grade should be last: K (letter), 3, 5 (numbers), then X
+      expect(options[0]).toHaveTextContent('K - Mrs. Kinder');
+      expect(options[1]).toHaveTextContent('3 - Mr. Third');
+      expect(options[2]).toHaveTextContent('5 - Ms. Fifth');
+      expect(options[3]).toHaveTextContent('X - Mr. Cross');
+    });
+  });
+
+  it('should sort grade X teachers to the end of the additional student teacher list', async () => {
+    const teachersWithGradeX = [
+      { name: 'Mr. Cross', grade: 'X' },
+      { name: 'Mrs. Kinder', grade: 'K' },
+      { name: 'Ms. Fifth', grade: '5' },
+    ];
+    mockedApi.getTeachers.mockResolvedValue(teachersWithGradeX);
+    const user = userEvent.setup();
+
+    render(
+      <BrowserRouter>
+        <RegistrationForm />
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Add Group Member/i })).toBeInTheDocument();
+    });
+
+    const addButton = screen.getByRole('button', { name: /Add Group Member/i });
+    await user.click(addButton);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Student 2 Teacher/i)).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByLabelText(/Student 2 Teacher/i));
+
+    await waitFor(() => {
+      const options = screen.getAllByRole('option');
+      // X grade should be last: K (letter), 5 (number), then X
+      expect(options[0]).toHaveTextContent('K - Mrs. Kinder');
+      expect(options[1]).toHaveTextContent('5 - Ms. Fifth');
+      expect(options[2]).toHaveTextContent('X - Mr. Cross');
+    });
+  });
+
   it('should handle teacher selection when grade is undefined or empty', async () => {
     const teachersWithMissingGrades = [
       { name: 'Mrs. Smith', grade: '3' },

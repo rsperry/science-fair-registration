@@ -277,12 +277,14 @@ const RegistrationForm = () => {
           ) : (
             teachers
               .sort((a, b) => {
-                // Sort by grade first (letters before numbers), then by name
+                // Sort by grade first (letters before numbers, X last), then by name
                 const gradeA = a.grade.toUpperCase();
                 const gradeB = b.grade.toUpperCase();
                 const isNumA = !isNaN(Number(gradeA));
                 const isNumB = !isNaN(Number(gradeB));
-                
+
+                if (gradeA === 'X' && gradeB !== 'X') return 1; // X goes last
+                if (gradeA !== 'X' && gradeB === 'X') return -1;
                 if (isNumA && !isNumB) return 1; // Numbers after letters
                 if (!isNumA && isNumB) return -1; // Letters before numbers
                 if (gradeA !== gradeB) return gradeA.localeCompare(gradeB);
@@ -423,7 +425,9 @@ const RegistrationForm = () => {
                     const gradeB = b.grade.toUpperCase();
                     const isNumA = !isNaN(Number(gradeA));
                     const isNumB = !isNaN(Number(gradeB));
-                    
+
+                    if (gradeA === 'X' && gradeB !== 'X') return 1; // X goes last
+                    if (gradeA !== 'X' && gradeB === 'X') return -1;
                     if (isNumA && !isNumB) return 1;
                     if (!isNumA && isNumB) return -1;
                     if (gradeA !== gradeB) return gradeA.localeCompare(gradeB);
